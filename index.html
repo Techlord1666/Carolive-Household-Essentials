@@ -9,6 +9,9 @@
     <meta name="description" content="Shop high-quality home essentials at Carolive Store. Quality kitchenware, bedding, and decor delivered across Nigeria. Reliable quality for the modern household."/>
     <meta name="keywords" content="Home essentials Nigeria, Kitchenware Lagos, Carolive Store, Premium bedding, Modern home decor, Doorstep delivery Nigeria"/>
 
+    <!-- Favicon (Using placeholder logo icon) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23003652%22/><text x=%2250%%22 y=%2250%%22 dominant-baseline=%22central%22 text-anchor=%22middle%22 fill=%22white%22 font-size=%2260%22 font-weight=%22bold%22>C</text></svg>">
+
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     
@@ -27,11 +30,16 @@
         }
 
         /* Modal Styling */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); }
         .modal.active { display: flex; }
-        .modal-content { background: white; padding: 40px; border-radius: 24px; max-width: 700px; max-height: 80vh; overflow-y: auto; position: relative; }
+        .modal-content { background: white; padding: 40px; border-radius: 24px; max-width: 800px; max-height: 85vh; overflow-y: auto; position: relative; }
 
-        /* Animations */
+        /* Carousel Styles */
+        .carousel-item { display: none; }
+        .carousel-item.active { display: block; animation: fade 1s ease-in-out; }
+        @keyframes fade { from { opacity: 0.4; } to { opacity: 1; } }
+
+        /* General Animations */
         .fade-in { animation: fadeIn 1.5s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -41,7 +49,7 @@
 <!-- Navigation -->
 <header class="sticky top-0 w-full z-50 bg-white/95 backdrop-blur-md shadow-sm h-20 flex items-center">
     <div class="max-w-7xl mx-auto px-6 w-full flex justify-between items-center">
-        <!-- Logo Placeholder -->
+        <!-- Logo -->
         <div class="flex items-center gap-2">
             <div class="w-10 h-10 bg-[#003652] rounded-lg flex items-center justify-center text-white font-bold text-xl">C</div>
             <span class="font-display text-2xl font-extrabold text-[#003652]">Carolive</span>
@@ -61,118 +69,168 @@
     </div>
 </header>
 
-<!-- Mobile Menu -->
+<!-- Mobile Menu Overlay -->
 <div id="mobileMenu" class="hidden fixed inset-0 z-40 bg-white p-10 flex flex-col gap-6 pt-24 shadow-2xl md:hidden">
-    <a href="#" class="text-2xl font-bold" onclick="toggleMenu()">Home</a>
-    <a href="#shop" class="text-2xl font-bold" onclick="toggleMenu()">Shop</a>
-    <a href="#contact" class="text-2xl font-bold" onclick="toggleMenu()">Contact</a>
+    <a href="#" class="text-3xl font-bold text-[#003652]" onclick="toggleMenu()">Home</a>
+    <a href="#shop" class="text-3xl font-bold text-[#003652]" onclick="toggleMenu()">Shop</a>
+    <a href="#contact" class="text-3xl font-bold text-[#003652]" onclick="toggleMenu()">Contact</a>
 </div>
 
 <main>
-    <!-- Modern Hero Section -->
-    <section class="relative min-h-[85vh] flex items-center px-6 py-12 max-w-7xl mx-auto">
-        <div class="grid lg:grid-cols-2 gap-12 items-center w-full">
-            <div class="fade-in">
-                <span class="inline-block px-4 py-1.5 rounded-full bg-[#cae6ff] text-[#001e2f] font-bold text-xs mb-6 uppercase tracking-wider">Reliable Quality Nigeria</span>
-                <h1 class="text-5xl md:text-7xl font-extrabold text-[#003652] leading-[1.1] mb-6">Modern Comfort <br>For Your Home</h1>
-                <p class="text-lg text-slate-600 mb-10 max-w-lg leading-relaxed">Discover curated essentials that blend durability with contemporary design. Elevate your living space with products built to last and designed to inspire.</p>
+    <!-- Modern Hero Section - Carousel First on Mobile -->
+    <section class="relative flex items-center px-6 py-8 md:py-16 max-w-7xl mx-auto">
+        <div class="flex flex-col lg:flex-row gap-12 items-center w-full">
+            
+            <!-- Hero Images (Carousel) - Order 1 on Mobile -->
+            <div class="w-full lg:w-1/2 order-1 lg:order-2">
+                <div id="carousel" class="relative h-[400px] md:h-[500px] lg:h-[600px] w-full overflow-hidden rounded-[2.5rem] shadow-2xl">
+                    <!-- Image 1 -->
+                    <div class="carousel-item active h-full w-full">
+                        <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=1000" class="w-full h-full object-cover" alt="Kitchen 1">
+                    </div>
+                    <!-- Image 2 -->
+                    <div class="carousel-item h-full w-full">
+                        <img src="https://images.unsplash.com/photo-1527018601619-a508a2be00cd?auto=format&fit=crop&q=80&w=1000" class="w-full h-full object-cover" alt="Kitchen 2">
+                    </div>
+                    <!-- Image 3 -->
+                    <div class="carousel-item h-full w-full">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&q=80&w=1000" class="w-full h-full object-cover" alt="Kitchen 3">
+                    </div>
+                    <!-- Image 4 -->
+                    <div class="carousel-item h-full w-full">
+                        <img src="https://images.unsplash.com/photo-1588854337236-6889d631faa8?auto=format&fit=crop&q=80&w=1000" class="w-full h-full object-cover" alt="Kitchen 4">
+                    </div>
+                    
+                    <!-- Overlay Badge -->
+                    <div class="absolute bottom-6 left-6 bg-white/90 backdrop-blur-sm p-4 rounded-2xl shadow-lg hidden md:flex items-center gap-3">
+                        <div class="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center text-teal-600"><span class="material-symbols-outlined">verified</span></div>
+                        <div><p class="font-bold text-sm">Premium Quality</p><p class="text-[10px] text-slate-500 tracking-wide uppercase">Tested for Durability</p></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Text Content - Order 2 on Mobile -->
+            <div class="w-full lg:w-1/2 order-2 lg:order-1 fade-in">
+                <span class="inline-block px-4 py-1.5 rounded-full bg-[#cae6ff] text-[#001e2f] font-bold text-xs mb-6 uppercase tracking-widest">Reliable Household Quality</span>
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold text-[#003652] leading-[1.1] mb-6">Modern Comfort <br>For Your Home</h1>
+                <p class="text-lg text-slate-600 mb-10 max-w-lg leading-relaxed">Discover curated essentials that blend durability with contemporary design. Elevate your living space with products built to last and designed to inspire Nigerian homes.</p>
                 <div class="flex flex-wrap gap-5">
-                    <a href="#shop" class="px-10 py-4 bg-[#006a60] text-white rounded-xl font-bold hover:bg-[#005048] transition-all shadow-lg">Shop Top Products</a>
-                    <a href="#contact" class="px-10 py-4 border-2 border-[#003652] text-[#003652] rounded-xl font-bold hover:bg-slate-50 transition-all">Get in Touch</a>
+                    <a href="#shop" class="px-10 py-4 bg-[#006a60] text-white rounded-xl font-bold hover:bg-[#005048] transition-all shadow-lg text-center w-full sm:w-auto">Shop Top Products</a>
+                    <a href="#contact" class="px-10 py-4 border-2 border-[#003652] text-[#003652] rounded-xl font-bold hover:bg-slate-50 transition-all text-center w-full sm:w-auto">Get in Touch</a>
                 </div>
             </div>
-            <div class="relative h-[500px] lg:h-[650px] fade-in">
-                <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1200" alt="Modern Interior" class="w-full h-full object-cover rounded-[3rem] shadow-2xl">
-                <div class="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl border border-slate-100 hidden md:flex items-center gap-4">
-                    <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center text-teal-600"><span class="material-symbols-outlined">verified</span></div>
-                    <div><p class="font-bold">Certified Quality</p><p class="text-xs text-slate-500">Guaranteed durability</p></div>
-                </div>
-            </div>
+            
         </div>
     </section>
 
-    <!-- RESTORED: Reliable quality for the modern household Section -->
-    <section class="py-xl px-gutter max-w-max-width mx-auto py-20 px-6">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-xl items-center gap-12">
+    <!-- COMPLETE: Reliable quality for the modern household Section -->
+    <section class="py-20 px-6 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div class="relative">
-                <div class="aspect-square bg-surface-container rounded-3xl overflow-hidden shadow-2xl relative z-10">
+                <div class="aspect-square bg-slate-200 rounded-[3rem] overflow-hidden shadow-2xl relative z-10">
                     <img alt="Manufacturing quality" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqWNAdSxrMiN9d3S6ucugP1nvbu5iCDy1ULjMmSRH9b90yV3sdeAvTvAHtFQuS0AhOWApmurQfZG-uEJnmLe2jfXsiVRE-GF6O0MdtZorSo52Ea9I0ieC1lTw-BInyPpsFag_sBDt65tNgge-OBO5EAizg_cZbUJ4VVg03b2nyFMD_YL2h1Ld4seeq5AetqlQvtPhLvGRwtFGapXune1iaXzXSxe6X5N0Ch1ISqbgi2AcXXre9qfhsjDf4EwA-ceAcruwYlmDsKus"/>
                 </div>
-                <div class="absolute -top-10 -right-10 w-48 h-48 bg-secondary-container rounded-full mix-blend-multiply filter blur-3xl opacity-30"></div>
+                <div class="absolute -top-10 -right-10 w-48 h-48 bg-teal-100 rounded-full mix-blend-multiply filter blur-3xl opacity-40"></div>
             </div>
-            <div class="lg:pl-lg">
-                <h2 class="font-display text-headline-lg text-primary mb-md text-3xl font-bold text-[#003652] mb-6">Reliable quality for the modern household.</h2>
-                <p class="font-body-md text-body-md text-on-surface-variant mb-lg mb-8 text-slate-600">We believe that a well-organized home is the foundation of a peaceful life. Our mission is to provide premium essentials that don't compromise on affordability or ethical standards.</p>
-                <ul class="space-y-lg space-y-6">
-                    <li class="flex gap-md gap-4">
-                        <div class="flex-shrink-0 w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-white bg-[#003652]"><span class="material-symbols-outlined">verified_user</span></div>
-                        <div><h4 class="font-label-md text-label-md text-primary mb-1 font-bold">Lifetime Reliability</h4><p class="font-body-sm text-body-sm text-on-surface-variant text-sm">Every product is tested against rigorous domestic usage standards to ensure it serves you for years.</p></div>
+            <div class="lg:pl-10">
+                <h2 class="text-4xl font-bold text-[#003652] mb-6">Reliable quality for the modern household.</h2>
+                <p class="text-lg text-slate-600 mb-10 leading-relaxed">We believe that a well-organized home is the foundation of a peaceful life. Our mission is to provide premium essentials that don't compromise on affordability or ethical standards.</p>
+                
+                <ul class="space-y-8">
+                    <li class="flex gap-5">
+                        <div class="flex-shrink-0 w-14 h-14 bg-[#003652] rounded-2xl flex items-center justify-center text-white"><span class="material-symbols-outlined">verified_user</span></div>
+                        <div>
+                            <h4 class="text-xl font-bold text-[#003652] mb-1">Lifetime Reliability</h4>
+                            <p class="text-slate-600">Every product is tested against rigorous domestic usage standards to ensure it serves you for years.</p>
+                        </div>
                     </li>
-                    <li class="flex gap-md gap-4">
-                        <div class="flex-shrink-0 w-12 h-12 bg-secondary rounded-xl flex items-center justify-center text-white bg-[#006a60]"><span class="material-symbols-outlined">payments</span></div>
-                        <div><h4 class="font-label-md text-label-md text-primary mb-1 font-bold">Fair & Transparent Pricing</h4><p class="font-body-sm text-body-sm text-on-surface-variant text-sm">Premium quality without the luxury markups. We optimize our supply chain to deliver value directly to you.</p></div>
+                    <li class="flex gap-5">
+                        <div class="flex-shrink-0 w-14 h-14 bg-[#006a60] rounded-2xl flex items-center justify-center text-white"><span class="material-symbols-outlined">payments</span></div>
+                        <div>
+                            <h4 class="text-xl font-bold text-[#003652] mb-1">Fair & Transparent Pricing</h4>
+                            <p class="text-slate-600">Premium quality without the luxury markups. We optimize our supply chain to deliver value directly to you.</p>
+                        </div>
+                    </li>
+                    <!-- Point 3 Added to be Complete -->
+                    <li class="flex gap-5">
+                        <div class="flex-shrink-0 w-14 h-14 bg-[#5c4600] rounded-2xl flex items-center justify-center text-white"><span class="material-symbols-outlined">eco</span></div>
+                        <div>
+                            <h4 class="text-xl font-bold text-[#003652] mb-1">Ethical Sourcing</h4>
+                            <p class="text-slate-600">We partner with artisans and manufacturers who prioritize sustainable practices and fair labor for a better world.</p>
+                        </div>
                     </li>
                 </ul>
             </div>
         </div>
     </section>
 
-    <!-- Top Selling Products Section (No Buttons) -->
+    <!-- Top Selling Products Section -->
     <section id="shop" class="py-20 bg-white">
-        <div class="max-w-7xl mx-auto px-6">
-            <h2 class="text-3xl font-bold text-[#003652] mb-12">Top Selling Products</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <div class="group"><img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=500" class="w-full h-72 object-cover rounded-2xl mb-4 group-hover:scale-105 transition"><h3 class="font-bold">Cloud-Soft Bedding</h3><p class="text-[#006a60]">₦55,000</p></div>
-                <div class="group"><img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=500" class="w-full h-72 object-cover rounded-2xl mb-4 group-hover:scale-105 transition"><h3 class="font-bold">Chef's Stainless Set</h3><p class="text-[#006a60]">₦120,000</p></div>
-                <div class="group"><img src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=500" class="w-full h-72 object-cover rounded-2xl mb-4 group-hover:scale-105 transition"><h3 class="font-bold">Aura Desk Lamp</h3><p class="text-[#006a60]">₦25,000</p></div>
-                <div class="group"><img src="https://images.unsplash.com/photo-1594913785162-e6785b493bd2?auto=format&fit=crop&w=500" class="w-full h-72 object-cover rounded-2xl mb-4 group-hover:scale-105 transition"><h3 class="font-bold">Minimalist Geometric Vase</h3><p class="text-[#006a60]">₦15,000</p></div>
+        <div class="max-w-7xl mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold text-[#003652] mb-12">Top Selling Products</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 text-left mb-16">
+                <div class="group"><img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=500" class="w-full h-80 object-cover rounded-3xl mb-4 group-hover:shadow-xl transition"><h3 class="font-bold text-lg">Cloud-Soft Bedding</h3><p class="text-[#006a60] font-semibold">₦55,000</p></div>
+                <div class="group"><img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=500" class="w-full h-80 object-cover rounded-3xl mb-4 group-hover:shadow-xl transition"><h3 class="font-bold text-lg">Chef's Stainless Set</h3><p class="text-[#006a60] font-semibold">₦120,000</p></div>
+                <div class="group"><img src="https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=500" class="w-full h-80 object-cover rounded-3xl mb-4 group-hover:shadow-xl transition"><h3 class="font-bold text-lg">Aura Desk Lamp</h3><p class="text-[#006a60] font-semibold">₦25,000</p></div>
+                <div class="group"><img src="https://images.unsplash.com/photo-1594913785162-e6785b493bd2?auto=format&fit=crop&w=500" class="w-full h-80 object-cover rounded-3xl mb-4 group-hover:shadow-xl transition"><h3 class="font-bold text-lg">Minimalist Geometric Vase</h3><p class="text-[#006a60] font-semibold">₦15,000</p></div>
             </div>
+            <!-- Added Shop Now Button -->
+            <a href="https://wa.me/2347036247597" class="inline-block px-12 py-5 bg-[#003652] text-white rounded-2xl font-bold text-lg hover:scale-105 transition-all shadow-xl">Shop Now</a>
         </div>
     </section>
 
-    <!-- Nigerian Reviews Section (Auto Scroll L to R) -->
-    <section class="py-20 bg-[#003652] overflow-hidden">
-        <h2 class="text-3xl font-bold text-white text-center mb-16">Trusted by Nigerians</h2>
+    <!-- Reviews Section (Auto Scroll L to R) -->
+    <section class="py-24 bg-[#003652] overflow-hidden">
+        <h2 class="text-3xl font-bold text-white text-center mb-16 tracking-tight">Trusted by 1,000+ Nigerians</h2>
         <div class="animate-scroll">
-            <!-- 10 Unique Reviews -->
-            <div class="flex gap-6 pr-6">
-                <div class="bg-white p-8 rounded-2xl w-[350px] shadow-xl"><p class="italic">"Best quality towels I've bought in Lagos. They don't fade at all."</p><p class="mt-4 font-bold text-teal-600">- Mrs. Adebayo, Lekki</p></div>
-                <div class="bg-white p-8 rounded-2xl w-[350px] shadow-xl"><p class="italic">"Delivery was fast to Port Harcourt. The kitchen set is very solid."</p><p class="mt-4 font-bold text-teal-600">- Emeka O., PH</p></div>
-                <div class="bg-white p-8 rounded-2xl w-[350px] shadow-xl"><p class="italic">"I love Carolive! Their bedding makes me want to stay in bed all day."</p><p class="mt-4 font-bold text-teal-600">- Chioma N., Enugu</p></div>
-                <div class="bg-white p-8 rounded-2xl w-[350px] shadow-xl"><p class="italic">"Finally a store that sells what they show in the picture. 10/10."</p><p class="mt-4 font-bold text-teal-600">- Babajide, Ikeja</p></div>
-                <div class="bg-white p-8 rounded-2xl w-[350px] shadow-xl"><p class="italic">"Excellent customer service. They helped me choose the right lamp."</p><p class="mt-4 font-bold text-teal-600">- Amina, Abuja</p></div>
-                <div class="bg-white p-8 rounded-2xl w-[350px] shadow-xl"><p class="italic">"The vases are so aesthetic. My living room looks like a hotel now."</p><p class="mt-4 font-bold text-teal-600">- Funke, Ibadan</p></div>
-                <div class="bg-white p-8 rounded-2xl w-[350px] shadow-xl"><p class="italic">"Reliable quality as promised. My pots are still shiny after 6 months."</p><p class="mt-4 font-bold text-teal-600">- Obinna, Asaba</p></div>
-                <div class="bg-white p-8 rounded-2xl w-[350px] shadow-xl"><p class="italic">"Very professional store. My order arrived well-packaged in Kano."</p><p class="mt-4 font-bold text-teal-600">- Zainab, Kano</p></div>
-                <div class="bg-white p-8 rounded-2xl w-[350px] shadow-xl"><p class="italic">"Worth every kobo. High thread count sheets are very hard to find."</p><p class="mt-4 font-bold text-teal-600">- Victoria, Benin</p></div>
-                <div class="bg-white p-8 rounded-2xl w-[350px] shadow-xl"><p class="italic">"The only place I buy my household items now. Very reliable."</p><p class="mt-4 font-bold text-teal-600">- Segun, Akure</p></div>
+            <div class="flex gap-8 pr-8">
+                <div class="bg-white p-8 rounded-3xl w-[380px] shadow-2xl"><p class="italic text-slate-700">"The quality is better than what I see in big malls. My kitchen looks so organized."</p><p class="mt-4 font-bold text-teal-600">- Mrs. Adebayo, Lagos</p></div>
+                <div class="bg-white p-8 rounded-3xl w-[380px] shadow-2xl"><p class="italic text-slate-700">"Super fast delivery to Port Harcourt. Packaging was very secure. I love it!"</p><p class="mt-4 font-bold text-teal-600">- Emeka O., PH City</p></div>
+                <div class="bg-white p-8 rounded-3xl w-[380px] shadow-2xl"><p class="italic text-slate-700">"Best bedsheets I have ever used. Very soft even after several washes."</p><p class="mt-4 font-bold text-teal-600">- Chioma N., Enugu</p></div>
+                <div class="bg-white p-8 rounded-3xl w-[380px] shadow-2xl"><p class="italic text-slate-700">"Authentic store. I was scared to buy online but Carolive is real."</p><p class="mt-4 font-bold text-teal-600">- Babajide, Ikeja</p></div>
+                <div class="bg-white p-8 rounded-3xl w-[380px] shadow-2xl"><p class="italic text-slate-700">"Highly professional service. They replied my WhatsApp instantly."</p><p class="mt-4 font-bold text-teal-600">- Amina, Abuja</p></div>
+                <div class="bg-white p-8 rounded-3xl w-[380px] shadow-2xl"><p class="italic text-slate-700">"My living room looks like a dream with the vases. Thank you!"</p><p class="mt-4 font-bold text-teal-600">- Funke, Ibadan</p></div>
+                <div class="bg-white p-8 rounded-3xl w-[380px] shadow-2xl"><p class="italic text-slate-700">"Durable pots. I've used them for 6 months and they are still like new."</p><p class="mt-4 font-bold text-teal-600">- Obinna, Asaba</p></div>
+                <div class="bg-white p-8 rounded-3xl w-[380px] shadow-2xl"><p class="italic text-slate-700">"Nationwide delivery is really fast. I got my items in Kano in 3 days."</p><p class="mt-4 font-bold text-teal-600">- Zainab, Kano</p></div>
+                <div class="bg-white p-8 rounded-3xl w-[380px] shadow-2xl"><p class="italic text-slate-700">"Premium stuff. You can't find this quality easily elsewhere."</p><p class="mt-4 font-bold text-teal-600">- Victoria, Benin</p></div>
+                <div class="bg-white p-8 rounded-3xl w-[380px] shadow-2xl"><p class="italic text-slate-700">"Excellent customer experience. Carolive is my go-to home store."</p><p class="mt-4 font-bold text-teal-600">- Segun, Akure</p></div>
             </div>
             <!-- Duplicate for loop -->
-            <div class="flex gap-6 pr-6">
-                <div class="bg-white p-8 rounded-2xl w-[350px] shadow-xl"><p class="italic">"Best quality towels I've bought in Lagos. They don't fade at all."</p><p class="mt-4 font-bold text-teal-600">- Mrs. Adebayo</p></div>
-                <div class="bg-white p-8 rounded-2xl w-[350px] shadow-xl"><p class="italic">"Delivery was fast to Port Harcourt. The kitchen set is very solid."</p><p class="mt-4 font-bold text-teal-600">- Emeka O.</p></div>
+            <div class="flex gap-8 pr-8">
+                <div class="bg-white p-8 rounded-3xl w-[380px] shadow-2xl"><p class="italic text-slate-700">"The quality is better than what I see in big malls. My kitchen looks so organized."</p><p class="mt-4 font-bold text-teal-600">- Mrs. Adebayo</p></div>
+                <div class="bg-white p-8 rounded-3xl w-[380px] shadow-2xl"><p class="italic text-slate-700">"Super fast delivery to Port Harcourt. Packaging was very secure."</p><p class="mt-4 font-bold text-teal-600">- Emeka O.</p></div>
             </div>
         </div>
     </section>
 
     <!-- WhatsApp Contact Form -->
-    <section id="contact" class="py-20 px-6">
-        <div class="max-w-4xl mx-auto bg-white rounded-[2rem] shadow-2xl overflow-hidden grid md:grid-cols-2">
+    <section id="contact" class="py-24 px-6 bg-slate-50">
+        <div class="max-w-5xl mx-auto bg-white rounded-[3rem] shadow-2xl overflow-hidden grid md:grid-cols-2">
             <div class="bg-[#003652] p-12 text-white flex flex-col justify-center">
-                <h2 class="text-3xl font-bold mb-6">Let's Talk</h2>
-                <p class="mb-8 opacity-80">Fill the form and we will receive your message instantly on our official WhatsApp line.</p>
-                <div class="space-y-4">
-                    <div class="flex items-center gap-4"><span class="material-symbols-outlined">call</span><span>+234 703 624 7597</span></div>
-                    <div class="flex items-center gap-4"><span class="material-symbols-outlined">mail</span><span>amadicaroline94@gmail.com</span></div>
+                <h2 class="text-4xl font-bold mb-6">Contact Us</h2>
+                <p class="text-lg opacity-80 mb-10">We deliver right to your doorstep. For orders or inquiries, send us a WhatsApp message now.</p>
+                <div class="space-y-6">
+                    <div class="flex items-center gap-5"><span class="material-symbols-outlined text-teal-400">call</span><span class="text-xl">+234 703 624 7597</span></div>
+                    <div class="flex items-center gap-5"><span class="material-symbols-outlined text-teal-400">mail</span><span class="text-xl">amadicaroline94@gmail.com</span></div>
+                    <div class="flex items-center gap-5"><span class="material-symbols-outlined text-teal-400">location_on</span><span class="text-xl">Lagos, Nigeria</span></div>
                 </div>
             </div>
             <div class="p-12">
-                <form id="waForm" class="space-y-4">
-                    <input type="text" id="name" placeholder="Your Name" required class="w-full p-4 border rounded-xl border-slate-200">
-                    <input type="text" id="order" placeholder="What are you looking for?" required class="w-full p-4 border rounded-xl border-slate-200">
-                    <textarea id="msg" placeholder="Your Message" rows="4" class="w-full p-4 border rounded-xl border-slate-200"></textarea>
-                    <button type="submit" class="w-full py-4 bg-green-600 text-white rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-green-700 transition">
-                        Send to WhatsApp
+                <form id="waForm" class="space-y-5">
+                    <div>
+                        <label class="block text-sm font-bold mb-2">Full Name</label>
+                        <input type="text" id="name" placeholder="John Doe" required class="w-full p-4 border rounded-2xl border-slate-200 focus:ring-2 focus:ring-teal-600">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2">Product Interested In</label>
+                        <input type="text" id="order" placeholder="e.g. Kitchen Set" required class="w-full p-4 border rounded-2xl border-slate-200 focus:ring-2 focus:ring-teal-600">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-bold mb-2">Your Message</label>
+                        <textarea id="msg" placeholder="Tell us your location and details..." rows="4" class="w-full p-4 border rounded-2xl border-slate-200 focus:ring-2 focus:ring-teal-600"></textarea>
+                    </div>
+                    <button type="submit" class="w-full py-5 bg-green-600 text-white rounded-2xl font-bold text-lg flex items-center justify-center gap-3 hover:bg-green-700 transition-all shadow-lg">
+                        <span class="material-symbols-outlined">chat</span> Send to WhatsApp
                     </button>
                 </form>
             </div>
@@ -181,80 +239,106 @@
 </main>
 
 <!-- Footer -->
-<footer class="bg-slate-900 text-white pt-20 pb-10 px-6">
-    <div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-12 mb-16">
-        <div class="col-span-1 md:col-span-2">
-            <h3 class="text-2xl font-bold mb-6">Carolive Store</h3>
-            <p class="text-slate-400 max-w-sm mb-6">Redefining modern living with reliable, high-quality home essentials tailored for the Nigerian home. Your comfort is our priority.</p>
-            <div class="flex gap-4">
-                <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition">FB</a>
-                <a href="#" class="w-10 h-10 bg-white/10 rounded-full flex items-center justify-center hover:bg-white/20 transition">TK</a>
+<footer class="bg-slate-900 text-white pt-24 pb-12 px-6">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-16 mb-20">
+        <div class="md:col-span-2">
+            <h3 class="text-3xl font-bold mb-6">Carolive Store</h3>
+            <p class="text-slate-400 text-lg mb-8 leading-relaxed">The trusted name for premium, long-lasting household essentials in Nigeria. We bring modern comfort and aesthetic beauty into your home with every product we sell.</p>
+            
+            <!-- Facebook and TikTok Icons as requested -->
+            <div class="flex gap-6">
+                <a href="#" class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-[#1877F2] transition-all">
+                    <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg>
+                </a>
+                <a href="#" class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center hover:bg-black transition-all">
+                    <svg class="w-6 h-6 fill-white" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.9-.32-1.98-.23-2.8.2-.67.33-1.24.93-1.51 1.63-.28.73-.28 1.54-.08 2.29.29.98 1.05 1.83 1.99 2.22.84.34 1.78.34 2.63-.01 1.05-.39 1.87-1.33 2.15-2.42.06-.27.08-.54.08-.82-.01-5.69-.01-11.37.01-17.06z"/></svg>
+                </a>
             </div>
         </div>
+        
+        <!-- Doorstep Delivery Icons -->
         <div>
-            <h4 class="font-bold mb-6 uppercase text-sm tracking-widest text-teal-400">Doorstep Delivery</h4>
-            <div class="space-y-4">
-                <div class="flex items-center gap-3 text-slate-400"><span class="material-symbols-outlined text-teal-500">local_shipping</span> <span>Nationwide Shipping</span></div>
-                <div class="flex items-center gap-3 text-slate-400"><span class="material-symbols-outlined text-teal-500">home</span> <span>Home Delivery</span></div>
-                <div class="flex items-center gap-3 text-slate-400"><span class="material-symbols-outlined text-teal-500">package_2</span> <span>Secure Packaging</span></div>
+            <h4 class="font-bold text-teal-400 mb-8 uppercase text-xs tracking-[0.2em]">Doorstep Delivery</h4>
+            <div class="space-y-6">
+                <div class="flex items-center gap-4 text-slate-300">
+                    <span class="material-symbols-outlined text-teal-500">local_shipping</span>
+                    <span class="font-medium">Nationwide Express</span>
+                </div>
+                <div class="flex items-center gap-4 text-slate-300">
+                    <span class="material-symbols-outlined text-teal-500">home</span>
+                    <span class="font-medium">Direct Home Delivery</span>
+                </div>
+                <div class="flex items-center gap-4 text-slate-300">
+                    <span class="material-symbols-outlined text-teal-500">package_2</span>
+                    <span class="font-medium">Careful Handling</span>
+                </div>
             </div>
         </div>
+
         <div>
-            <h4 class="font-bold mb-6 uppercase text-sm tracking-widest text-teal-400">Information</h4>
-            <ul class="space-y-3 text-slate-400">
-                <li><button onclick="openModal('privacyModal')" class="hover:text-white">Privacy Policy</button></li>
-                <li><button onclick="openModal('termsModal')" class="hover:text-white">Terms of Service</button></li>
-                <li><button onclick="openModal('refundModal')" class="hover:text-white">Returns & Refunds</button></li>
+            <h4 class="font-bold text-teal-400 mb-8 uppercase text-xs tracking-[0.2em]">Legal & Policy</h4>
+            <ul class="space-y-4 text-slate-400 font-medium">
+                <li><button onclick="openModal('privacyModal')" class="hover:text-white transition">Privacy Policy</button></li>
+                <li><button onclick="openModal('termsModal')" class="hover:text-white transition">Terms of Service</button></li>
+                <li><button onclick="openModal('refundModal')" class="hover:text-white transition">Returns & Refunds</button></li>
             </ul>
         </div>
     </div>
+    
     <div class="max-w-7xl mx-auto pt-10 border-t border-white/10 text-center text-slate-500 text-sm">
-        &copy; 2024 Carolive Store. All rights reserved. Made by Amadi Caroline.
+        &copy; 2024 Carolive Store. All rights reserved. | Contact: +234 703 624 7597
     </div>
 </footer>
 
-<!-- Modals -->
+<!-- POLICY MODALS - FULLY EXPLAINED AS REQUESTED -->
 <div id="privacyModal" class="modal" onclick="closeModal('privacyModal')">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h2 class="text-3xl font-bold mb-6 text-[#003652]">Privacy Policy</h2>
-        <div class="space-y-4 text-slate-600 leading-relaxed">
-            <p><strong>Introduction:</strong> At Carolive Store, we respect your personal data. This policy explains how we collect, use, and protect your information when you visit our store or interact with our WhatsApp team.</p>
-            <p><strong>Data Collection:</strong> We collect your name, phone number, and delivery address solely for the purpose of fulfilling your orders. We do not sell or share your personal data with third-party marketing companies.</p>
-            <p><strong>Cookies:</strong> Our website uses minor cookies to improve your browsing experience and analyze site traffic.</p>
-            <p><strong>Security:</strong> We implement a variety of security measures to maintain the safety of your personal information. Your transaction details are handled through encrypted channels.</p>
-            <p>For more details, contact us at amadicaroline94@gmail.com.</p>
+        <h2 class="text-4xl font-bold mb-8 text-[#003652]">Privacy Policy</h2>
+        <div class="space-y-6 text-slate-700 leading-[1.8] text-base">
+            <p><strong>1. Our Commitment:</strong> Carolive Store is deeply committed to protecting the privacy of our customers. This policy details how we handle the personal information you provide to us during your shopping experience.</p>
+            <p><strong>2. Information We Collect:</strong> When you make an inquiry via WhatsApp or fill our contact form, we collect your <strong>Full Name, Phone Number, Email Address, and Home Address</strong>. This information is strictly used for order processing and doorstep delivery within Nigeria.</p>
+            <p><strong>3. Use of Your Data:</strong> Your information is used to:
+                <br>• Verify and fulfill your product orders.
+                <br>• Communicate delivery schedules and updates.
+                <br>• Improve our product selection based on Nigerian home needs.
+            </p>
+            <p><strong>4. Third-Party Sharing:</strong> We do NOT sell, trade, or otherwise transfer your personal information to outside parties. Your address is only shared with our trusted logistics partners specifically for delivery purposes.</p>
+            <p><strong>5. Data Security:</strong> We implement modern encryption and security measures to protect your personal data from unauthorized access. For any privacy concerns, contact amadicaroline94@gmail.com.</p>
         </div>
-        <button onclick="closeModal('privacyModal')" class="mt-8 px-6 py-2 bg-slate-900 text-white rounded-lg">Close</button>
+        <button onclick="closeModal('privacyModal')" class="mt-10 px-8 py-3 bg-[#003652] text-white rounded-xl font-bold">I Understand</button>
     </div>
 </div>
 
 <div id="termsModal" class="modal" onclick="closeModal('termsModal')">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h2 class="text-3xl font-bold mb-6 text-[#003652]">Terms of Service</h2>
-        <div class="space-y-4 text-slate-600 leading-relaxed">
-            <p><strong>Acceptance of Terms:</strong> By accessing Carolive Store, you agree to comply with our operating rules and local Nigerian commerce laws.</p>
-            <p><strong>Product Accuracy:</strong> We strive to display product colors and images as accurately as possible. However, we cannot guarantee that your monitor's display will be 100% accurate.</p>
-            <p><strong>Pricing:</strong> Prices for our products are subject to change without notice. We reserve the right to modify or discontinue service at any time.</p>
-            <p><strong>Payment:</strong> Full payment is required before the dispatch of goods for nationwide delivery. For Lagos residents, specific payment-on-delivery terms may apply upon request.</p>
+        <h2 class="text-4xl font-bold mb-8 text-[#003652]">Terms of Service</h2>
+        <div class="space-y-6 text-slate-700 leading-[1.8] text-base">
+            <p><strong>1. Service Overview:</strong> By using the Carolive Store website and making purchases via our WhatsApp channel, you agree to follow our operational procedures. We provide high-quality home essentials for sale across Nigeria.</p>
+            <p><strong>2. Product Representation:</strong> We make every effort to display high-resolution images of our kitchenware, bedding, and decor. However, slight variations in color may occur due to device display settings. We guarantee that the physical quality matches our reliable standards.</p>
+            <p><strong>3. Order Confirmation:</strong> An order is only considered confirmed once payment details have been verified or a formal commitment is made via our WhatsApp sales representative.</p>
+            <p><strong>4. Pricing and Payment:</strong> All prices are in Nigerian Naira (₦). We reserve the right to adjust prices due to market fluctuations. Payment must be made through our official channels provided during your WhatsApp chat.</p>
+            <p><strong>5. Delivery Timeline:</strong> While we aim for rapid doorstep delivery, timelines may vary based on your state of residence. Lagos orders typically arrive within 24-48 hours, while nationwide delivery takes 3-5 business days.</p>
         </div>
-        <button onclick="closeModal('termsModal')" class="mt-8 px-6 py-2 bg-slate-900 text-white rounded-lg">Close</button>
+        <button onclick="closeModal('termsModal')" class="mt-10 px-8 py-3 bg-[#003652] text-white rounded-xl font-bold">Close Terms</button>
     </div>
 </div>
 
 <div id="refundModal" class="modal" onclick="closeModal('refundModal')">
     <div class="modal-content" onclick="event.stopPropagation()">
-        <h2 class="text-3xl font-bold mb-6 text-[#003652]">Returns & Refund Policy</h2>
-        <div class="space-y-4 text-slate-600 leading-relaxed">
-            <p><strong>Return Period:</strong> We offer a 48-hour return window from the time of delivery if the item received is damaged, defective, or incorrect.</p>
-            <p><strong>Conditions for Return:</strong> Items must be unused, in the same condition you received them, and in the original packaging. You will need to provide the receipt or proof of purchase.</p>
-            <p><strong>Refund Process:</strong> Once your return is received and inspected, we will notify you of the approval or rejection of your refund. Approved refunds will be processed via bank transfer within 5-7 business days.</p>
-            <p><strong>Shipping Costs:</strong> You will be responsible for paying for your own shipping costs for returning your item. Shipping costs are non-refundable.</p>
+        <h2 class="text-4xl font-bold mb-8 text-[#003652]">Returns & Refund Policy</h2>
+        <div class="space-y-6 text-slate-700 leading-[1.8] text-base">
+            <p><strong>1. Eligibility for Returns:</strong> We offer a 48-hour return window for any product that arrives damaged or is significantly different from what was ordered. To be eligible, the item must be unused, unwashed, and in its original premium packaging.</p>
+            <p><strong>2. The Process:</strong> If you receive a faulty item, please take a clear photograph or video and send it to our WhatsApp line (+234 703 624 7597) immediately. We will arrange a pickup or provide an exchange address.</p>
+            <p><strong>3. Exchanges:</strong> We prioritize exchanges. If a product is out of stock, we will offer a store credit or an alternative product of the same value.</p>
+            <p><strong>4. Refund Approval:</strong> Refunds are only issued if an exchange is not possible for a verified faulty item. Approved refunds are processed via bank transfer within 7 working days.</p>
+            <p><strong>5. Non-Returnable Items:</strong> For hygiene reasons, bedding and linens that have been removed from packaging or used cannot be returned unless they have a manufacturing defect.</p>
         </div>
-        <button onclick="closeModal('refundModal')" class="mt-8 px-6 py-2 bg-slate-900 text-white rounded-lg">Close</button>
+        <button onclick="closeModal('refundModal')" class="mt-10 px-8 py-3 bg-[#003652] text-white rounded-xl font-bold">Return Policy Home</button>
     </div>
 </div>
 
 <script>
+    // Navigation Logic
     function toggleMenu() {
         const menu = document.getElementById('mobileMenu');
         const icon = document.getElementById('menuIcon');
@@ -262,8 +346,21 @@
         icon.innerText = menu.classList.contains('hidden') ? 'menu' : 'close';
     }
 
+    // Modal Logic
     function openModal(id) { document.getElementById(id).classList.add('active'); }
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+    // Carousel Logic
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.carousel-item');
+    function showSlides() {
+        slides.forEach(s => s.classList.remove('active'));
+        currentSlide++;
+        if (currentSlide > slides.length) {currentSlide = 1}
+        slides[currentSlide-1].classList.add('active');
+        setTimeout(showSlides, 5000); // Change image every 5 seconds
+    }
+    showSlides();
 
     // WhatsApp Form Logic
     document.getElementById('waForm').addEventListener('submit', function(e) {
@@ -273,7 +370,7 @@
         const message = document.getElementById('msg').value;
         const phone = "2347036247597";
         
-        const text = `Hello Carolive Store, my name is ${name}. %0A%0A*I am interested in:* ${order} %0A*Message:* ${message}`;
+        const text = `Hello Carolive Store, my name is ${name}. %0A%0A*I am interested in:* ${order} %0A*Message Details:* ${message}`;
         window.open(`https://wa.me/${phone}?text=${text}`, '_blank');
     });
 </script>
