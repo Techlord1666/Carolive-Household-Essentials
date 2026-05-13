@@ -10,144 +10,121 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     
     <style>
-        body { min-height: 100vh; display: flex; flex-direction: column; background-color: #f8f9fa; }
-        .form-container { width: 100%; max-width: 450px; background: white; padding: 40px; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.03); border: 1px solid #f1f5f9; }
+        body { min-height: 100vh; display: flex; flex-direction: column; background-color: #f8f9fa; font-family: 'Inter', sans-serif; }
+        .auth-card { width: 100%; max-width: 420px; background: white; padding: 40px 30px; border-radius: 32px; box-shadow: 0 15px 50px rgba(0,0,0,0.04); border: 1px solid #f1f5f9; }
         .hidden { display: none; }
-        
-        /* Smooth Fade Animation */
-        .fade-in { animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        input { transition: all 0.3s ease; }
-        input:focus { border-color: #003652 !important; box-shadow: 0 0 0 4px rgba(0, 54, 82, 0.1) !important; }
+        input { transition: all 0.2s ease; border-radius: 14px !important; }
+        input:focus { border-color: #003652 !important; ring: 2px #003652; }
     </style>
 </head>
-<body class="font-sans">
+<body>
 
-<!-- Navigation -->
+<!-- Header -->
 <header class="bg-white border-b sticky top-0 z-[3000]">
     <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center text-[#003652]">
         <a href="index.html" class="flex items-center gap-1 font-bold">
             <span class="material-symbols-outlined text-2xl">arrow_back</span>
-            <span class="text-xs font-bold uppercase tracking-widest hidden sm:block">Back to Home</span>
         </a>
-
         <div class="flex flex-col items-center">
             <h1 class="text-2xl font-black italic leading-none tracking-tighter">Carolive</h1>
-            <span class="text-[7px] tracking-[0.3em] font-bold text-teal-600 uppercase">Premium Essentials</span>
+            <span class="text-[7px] tracking-[0.2em] font-bold text-teal-600 uppercase">Premium Essentials</span>
         </div>
-
         <div class="w-10"></div>
     </div>
 </header>
 
-<main class="flex-grow flex items-center justify-center px-6 py-12">
+<main class="flex-grow flex items-center justify-center px-6 py-10">
     
-    <!-- LOGIN FORM SECTION -->
-    <div id="login-box" class="form-container fade-in">
-        <div class="text-center mb-10">
-            <h2 class="text-3xl font-black text-[#003652] mb-2 leading-tight">Welcome Back</h2>
-            <p class="text-slate-400 text-sm">Please enter your details to sign in.</p>
+    <!-- LOGIN FORM -->
+    <div id="login-box" class="auth-card">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-black text-[#003652] mb-2">Welcome</h2>
+            <p class="text-slate-400 text-sm font-medium">Log in to your account</p>
         </div>
         
-        <form id="loginForm" class="space-y-5">
+        <form id="loginForm" class="space-y-4">
             <div>
-                <label class="block text-xs font-bold text-slate-500 uppercase mb-2 tracking-widest">Email Address</label>
-                <input type="email" id="loginEmail" placeholder="Enter your email" required 
-                       class="w-full p-4 bg-slate-50 border-slate-200 rounded-2xl focus:bg-white border text-sm">
+                <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Email Address</label>
+                <input type="email" id="loginEmail" placeholder="email@example.com" required class="w-full p-4 bg-slate-50 border-slate-200 border text-sm mt-1">
             </div>
-            
             <div>
-                <label class="block text-xs font-bold text-slate-500 uppercase mb-2 tracking-widest">Password</label>
-                <input type="password" id="loginPass" placeholder="••••••••" required 
-                       class="w-full p-4 bg-slate-50 border-slate-200 rounded-2xl focus:bg-white border text-sm">
+                <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Password</label>
+                <input type="password" id="loginPass" placeholder="••••••••" required class="w-full p-4 bg-slate-50 border-slate-200 border text-sm mt-1">
             </div>
-
-            <button type="submit" id="loginBtn" class="w-full py-4 bg-[#003652] text-white rounded-2xl font-black shadow-xl hover:bg-black transition-all transform active:scale-95 uppercase tracking-widest">
+            <button type="submit" id="loginBtn" class="w-full py-4 bg-[#003652] text-white rounded-2xl font-black shadow-lg hover:bg-black transition-all uppercase tracking-widest text-xs">
                 Log In
             </button>
         </form>
         
-        <div class="mt-10 text-center">
-            <p class="text-slate-500 text-sm font-medium">New to Carolive?</p>
-            <button onclick="toggleForm()" class="text-teal-600 font-bold hover:underline mt-1">Create an Account</button>
+        <div class="mt-8 text-center border-t pt-6">
+            <p class="text-slate-400 text-xs font-bold">Don't have an account?</p>
+            <button onclick="toggleAuth()" class="text-teal-600 font-black text-sm mt-1 hover:underline">Create Account</button>
         </div>
     </div>
 
-    <!-- SIGNUP FORM SECTION -->
-    <div id="signup-box" class="form-container hidden fade-in">
-        <div class="text-center mb-10">
-            <h2 class="text-3xl font-black text-[#003652] mb-2 leading-tight">Join Carolive</h2>
-            <p class="text-slate-400 text-sm">Create an account for a better shopping experience.</p>
+    <!-- SIGNUP FORM -->
+    <div id="signup-box" class="auth-card hidden">
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-black text-[#003652] mb-2">Join Us</h2>
+            <p class="text-slate-400 text-sm font-medium">Start your journey with Carolive</p>
         </div>
         
-        <form id="signupForm" class="space-y-5">
+        <form id="signupForm" class="space-y-4">
             <div>
-                <label class="block text-xs font-bold text-slate-500 uppercase mb-2 tracking-widest">Full Name</label>
-                <input type="text" id="signupName" placeholder="Full Name" required 
-                       class="w-full p-4 bg-slate-50 border-slate-200 rounded-2xl border text-sm">
+                <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Full Name</label>
+                <input type="text" id="signupName" placeholder="John Doe" required class="w-full p-4 bg-slate-50 border-slate-200 border text-sm mt-1">
             </div>
-
             <div>
-                <label class="block text-xs font-bold text-slate-500 uppercase mb-2 tracking-widest">Email Address</label>
-                <input type="email" id="signupEmail" placeholder="Email Address" required 
-                       class="w-full p-4 bg-slate-50 border-slate-200 rounded-2xl border text-sm">
+                <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Email Address</label>
+                <input type="email" id="signupEmail" placeholder="email@example.com" required class="w-full p-4 bg-slate-50 border-slate-200 border text-sm mt-1">
             </div>
-            
             <div>
-                <label class="block text-xs font-bold text-slate-500 uppercase mb-2 tracking-widest">Create Password</label>
-                <input type="password" id="signupPass" placeholder="Minimum 6 characters" required 
-                       class="w-full p-4 bg-slate-50 border-slate-200 rounded-2xl border text-sm">
+                <label class="text-[10px] font-bold text-slate-400 uppercase ml-2">Password</label>
+                <input type="password" id="signupPass" placeholder="Min. 6 characters" required class="w-full p-4 bg-slate-50 border-slate-200 border text-sm mt-1">
             </div>
-
-            <button type="submit" id="signupBtn" class="w-full py-4 bg-teal-600 text-white rounded-2xl font-black shadow-xl hover:bg-teal-700 transition-all transform active:scale-95 uppercase tracking-widest">
+            <button type="submit" id="signupBtn" class="w-full py-4 bg-teal-600 text-white rounded-2xl font-black shadow-lg hover:bg-teal-700 transition-all uppercase tracking-widest text-xs">
                 Sign Up
             </button>
         </form>
         
-        <div class="mt-10 text-center">
-            <p class="text-slate-500 text-sm font-medium">Already have an account?</p>
-            <button onclick="toggleForm()" class="text-[#003652] font-bold hover:underline mt-1">Sign In instead</button>
+        <div class="mt-8 text-center border-t pt-6">
+            <p class="text-slate-400 text-xs font-bold">Already have an account?</p>
+            <button onclick="toggleAuth()" class="text-[#003652] font-black text-sm mt-1 hover:underline">Log In Instead</button>
         </div>
     </div>
 
 </main>
 
-<!-- Footer -->
-<footer class="bg-white border-t py-8 text-center">
-    <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em]">
-        © 2025 Carolive Store Nigeria. Quality You Can Trust.
+<footer class="bg-white border-t py-6 text-center">
+    <p class="text-slate-400 text-[9px] font-bold uppercase tracking-[0.2em]">
+        © 2025 Carolive Store Nigeria.
     </p>
 </footer>
 
 <script>
-    // Supabase Credentials
     const supabaseUrl = 'https://bfeicdnalzokkutpkwki.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmZWljZG5hbHpva2t1dHBrd2tpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NzY2NDIsImV4cCI6MjA5NDI1MjY0Mn0.lK42cRXm_ulcwiSPah3Tg_z3Uwp4WpcIlu_VSYnWVNE';
     const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    // Toggle logic
-    function toggleForm() {
+    function toggleAuth() {
         document.getElementById('login-box').classList.toggle('hidden');
         document.getElementById('signup-box').classList.toggle('hidden');
     }
 
-    // --- SIGN UP HANDLER ---
+    // SIGN UP
     document.getElementById('signupForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = document.getElementById('signupEmail').value;
-        const pass = document.getElementById('signupPass').value;
+        const password = document.getElementById('signupPass').value;
         const name = document.getElementById('signupName').value;
         const btn = document.getElementById('signupBtn');
 
-        btn.innerText = "PROCESSING..."; btn.disabled = true;
+        btn.innerText = "CREATING..."; btn.disabled = true;
 
         const { data, error } = await _supabase.auth.signUp({
             email: email,
-            password: pass,
-            options: {
-                data: { full_name: name }
-            }
+            password: password,
+            options: { data: { full_name: name } }
         });
 
         if (error) {
@@ -155,31 +132,31 @@
             btn.innerText = "SIGN UP"; btn.disabled = false;
         } else {
             alert("Success! Welcome to Carolive Store. You can now login.");
-            toggleForm();
+            toggleAuth();
             btn.innerText = "SIGN UP"; btn.disabled = false;
         }
     });
 
-    // --- LOGIN HANDLER ---
+    // LOGIN
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = document.getElementById('loginEmail').value;
-        const pass = document.getElementById('loginPass').value;
+        const password = document.getElementById('loginPass').value;
         const btn = document.getElementById('loginBtn');
 
-        btn.innerText = "SIGNING IN..."; btn.disabled = true;
+        btn.innerText = "LOGGING IN..."; btn.disabled = true;
 
         const { data, error } = await _supabase.auth.signInWithPassword({
             email: email,
-            password: pass,
+            password: password,
         });
 
         if (error) {
             alert("Login Failed: " + error.message);
             btn.innerText = "LOG IN"; btn.disabled = false;
         } else {
-            // Success - redirect to shop page
-            window.location.href = 'shop.html';
+            // Success - Redirect to Dashboard
+            window.location.href = 'dash.html';
         }
     });
 </script>
