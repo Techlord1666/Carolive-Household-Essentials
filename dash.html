@@ -1,79 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="light" lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-    <title>Dashboard - Carolive Store</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>My Dashboard - Carolive Store</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet"/>
     <style>
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        body { background-color: #f8f9fa; }
-        .card { background: white; border-radius: 24px; border: 1px solid #edf2f7; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+        body { background-color: #f8f9fa; font-family: 'Inter', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+        .glass-card { background: white; border-radius: 2rem; border: 1px solid #eee; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
     </style>
 </head>
-<body class="font-sans text-slate-900">
+<body>
 
-<!-- Nav -->
-<header class="bg-white border-b h-16 flex items-center px-4 sticky top-0 z-50">
-    <div class="max-w-5xl mx-auto w-full flex justify-between items-center">
-        <h1 class="text-xl font-black text-[#003652] italic">Carolive</h1>
-        <div class="flex items-center gap-3">
-            <a href="shop.html" class="text-[10px] font-bold bg-[#003652] text-white px-4 py-2 rounded-full uppercase">Shop</a>
-            <button onclick="logout()" class="material-symbols-outlined text-red-500">logout</button>
-        </div>
+<header class="bg-white border-b sticky top-0 z-[1000] px-4 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-4">
+        <a href="shop.html" class="material-symbols-outlined text-[#003652]">arrow_back</a>
+        <h1 class="text-xl font-black text-[#003652] italic uppercase tracking-tighter">My Account</h1>
     </div>
+    <button onclick="handleLogout()" class="text-red-500 font-bold text-xs">LOGOUT</button>
 </header>
 
-<main class="max-w-5xl mx-auto p-4 py-8 space-y-6">
-    
-    <!-- Profile Section -->
-    <section class="card p-6 flex flex-col md:flex-row items-center gap-6">
-        <div class="relative group">
-            <img id="avatar-img" src="https://via.placeholder.com/150" class="w-24 h-24 md:w-32 md:h-32 rounded-full object-cover border-4 border-slate-100 shadow-sm">
-            <label class="absolute bottom-0 right-0 bg-[#003652] text-white p-2 rounded-full cursor-pointer shadow-lg">
+<main class="max-w-4xl mx-auto p-4 py-8 space-y-6 w-full flex-grow">
+    <!-- Profile Card -->
+    <section class="glass-card p-6 flex flex-col md:flex-row items-center gap-6">
+        <div class="relative">
+            <div class="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden border-4 border-white shadow-lg bg-slate-100">
+                <img id="user-avatar" src="https://via.placeholder.com/150" class="w-full h-full object-cover">
+            </div>
+            <label class="absolute bottom-0 right-0 bg-[#003652] text-white p-2 rounded-full cursor-pointer shadow-md">
                 <span class="material-symbols-outlined text-sm">photo_camera</span>
                 <input type="file" id="avatar-input" class="hidden" accept="image/*">
             </label>
         </div>
         <div class="text-center md:text-left flex-grow">
-            <h2 id="display-name" class="text-2xl md:text-3xl font-black text-[#003652]">Loading...</h2>
-            <p id="display-email" class="text-slate-400 text-sm mb-4">email@example.com</p>
-            <div class="flex flex-wrap justify-center md:justify-start gap-2">
-                <span class="text-[10px] font-bold bg-teal-100 text-teal-700 px-3 py-1 rounded-full uppercase">Verified Buyer</span>
-            </div>
+            <h2 id="display-name" class="text-2xl font-black text-[#003652]">Hello, Customer</h2>
+            <p id="display-email" class="text-slate-400 text-sm mb-4"></p>
+            <span class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase">Verified Buyer</span>
         </div>
     </section>
 
     <!-- Details Form -->
-    <section class="card p-6">
-        <h3 class="font-bold text-lg mb-6 flex items-center gap-2">
-            <span class="material-symbols-outlined">contact_page</span> Shipping Details
+    <section class="glass-card p-6 md:p-10">
+        <h3 class="font-bold text-[#003652] mb-6 flex items-center gap-2 uppercase text-xs tracking-widest">
+            <span class="material-symbols-outlined text-lg">edit_note</span> Update Personal Details
         </h3>
-        <form id="profile-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <label class="text-[10px] font-bold text-slate-400 uppercase">Phone Number</label>
-                <input type="text" id="phone" placeholder="e.g. 08012345678" class="w-full p-3 bg-slate-50 border rounded-xl mt-1">
-            </div>
-            <div>
-                <label class="text-[10px] font-bold text-slate-400 uppercase">Delivery Address</label>
-                <input type="text" id="address" placeholder="Home or Office Address" class="w-full p-3 bg-slate-50 border rounded-xl mt-1">
-            </div>
-            <button type="submit" id="save-btn" class="md:col-span-2 py-4 bg-[#003652] text-white rounded-xl font-bold text-sm uppercase tracking-widest shadow-lg">Update Information</button>
+        <form id="profile-form" class="space-y-4">
+            <input type="text" id="user-fullname" placeholder="Your Full Name" class="w-full p-4 border rounded-2xl">
+            <input type="text" id="user-phone" placeholder="Your Phone Number" class="w-full p-4 border rounded-2xl">
+            <textarea id="user-address" placeholder="Full Delivery Address" rows="3" class="w-full p-4 border rounded-2xl"></textarea>
+            <button type="submit" id="saveBtn" class="w-full py-4 bg-[#003652] text-white rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl">Save Changes</button>
         </form>
     </section>
 
-    <!-- Orders Section -->
-    <section class="card p-6">
-        <h3 class="font-bold text-lg mb-6 flex items-center gap-2">
-            <span class="material-symbols-outlined">shopping_bag</span> Order History
+    <!-- Order History -->
+    <section class="glass-card p-6">
+        <h3 class="font-bold text-[#003652] mb-6 flex items-center gap-2 uppercase text-xs tracking-widest">
+            <span class="material-symbols-outlined text-lg">shopping_bag</span> Your Recent Orders
         </h3>
         <div id="orders-list" class="space-y-4">
-            <p class="text-slate-400 text-sm italic">You haven't placed any orders yet.</p>
+            <p class="text-slate-400 text-sm italic text-center py-10">You haven't placed any orders yet.</p>
         </div>
     </section>
-
 </main>
 
 <script>
@@ -87,88 +76,66 @@
         const { data: { user } } = await _supabase.auth.getUser();
         if (!user) { window.location.href = 'auth.html'; return; }
         currentUser = user;
-        
-        document.getElementById('display-name').innerText = user.user_metadata.full_name || "Customer";
         document.getElementById('display-email').innerText = user.email;
-
         loadProfile();
         loadOrders();
     }
 
-    // Load and Save Profile
     async function loadProfile() {
         const { data } = await _supabase.from('profiles').select('*').eq('id', currentUser.id).single();
         if (data) {
-            document.getElementById('phone').value = data.phone || '';
-            document.getElementById('address').value = data.address || '';
-            if(data.avatar_url) document.getElementById('avatar-img').src = data.avatar_url;
+            document.getElementById('user-fullname').value = data.full_name || '';
+            document.getElementById('display-name').innerText = `Hello, ${data.full_name || 'Customer'}`;
+            document.getElementById('user-phone').value = data.phone || '';
+            document.getElementById('user-address').value = data.address || '';
+            if (data.avatar_url) document.getElementById('user-avatar').src = data.avatar_url;
         }
     }
 
     document.getElementById('profile-form').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const btn = document.getElementById('save-btn');
-        btn.innerText = "SAVING...";
-        
+        const btn = document.getElementById('saveBtn'); btn.innerText = "SAVING...";
         const updates = {
             id: currentUser.id,
-            phone: document.getElementById('phone').value,
-            address: document.getElementById('address').value,
-            full_name: currentUser.user_metadata.full_name
+            full_name: document.getElementById('user-fullname').value,
+            phone: document.getElementById('user-phone').value,
+            address: document.getElementById('user-address').value,
         };
-
         const { error } = await _supabase.from('profiles').upsert(updates);
-        alert(error ? error.message : "Profile Updated!");
-        btn.innerText = "Update Information";
+        if (!error) { alert("Details Saved!"); location.reload(); }
     });
 
-    // Avatar Upload
     document.getElementById('avatar-input').addEventListener('change', async (e) => {
         const file = e.target.files[0];
         if (!file) return;
-
-        const fileExt = file.name.split('.').pop();
-        const path = `${currentUser.id}/avatar.${fileExt}`;
-
-        // 1. Upload to storage
-        const { data, error } = await _supabase.storage.from('avatars').upload(path, file, { upsert: true });
-        
+        const filePath = `avatars/${currentUser.id}_${Date.now()}`;
+        const { data } = await _supabase.storage.from('product-images').upload(filePath, file);
         if (data) {
-            const { data: urlData } = _supabase.storage.from('avatars').getPublicUrl(path);
-            const avatarUrl = urlData.publicUrl;
-
-            // 2. Update profiles table
-            await _supabase.from('profiles').update({ avatar_url: avatarUrl }).eq('id', currentUser.id);
-            document.getElementById('avatar-img').src = avatarUrl;
-            alert("Picture Updated!");
+            const { data: urlData } = _supabase.storage.from('product-images').getPublicUrl(filePath);
+            await _supabase.from('profiles').upsert({ id: currentUser.id, avatar_url: urlData.publicUrl });
+            document.getElementById('user-avatar').src = urlData.publicUrl;
+            alert("Profile Picture Updated!");
         }
     });
 
-    // Load Orders
     async function loadOrders() {
         const { data } = await _supabase.from('orders').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
-        const list = document.getElementById('orders-list');
         if (data && data.length > 0) {
-            list.innerHTML = data.map(o => `
-                <div class="bg-slate-50 p-4 rounded-2xl border flex justify-between items-center">
-                    <div>
-                        <p class="font-bold text-sm">${o.items.substring(0, 30)}...</p>
-                        <p class="text-[10px] text-slate-400">${new Date(o.created_at).toLocaleDateString()}</p>
+            const container = document.getElementById('orders-list');
+            container.innerHTML = data.map(order => `
+                <div class="p-5 border rounded-3xl bg-slate-50 relative overflow-hidden">
+                    <div class="flex justify-between items-center mb-3">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase">${new Date(order.created_at).toLocaleDateString()}</span>
+                        <span class="text-[10px] bg-teal-500 text-white px-2 py-0.5 rounded-full font-bold">PAID</span>
                     </div>
-                    <div class="text-right">
-                        <p class="font-black text-[#003652]">${o.total_price}</p>
-                        <span class="text-[9px] font-bold uppercase text-teal-600 bg-teal-50 px-2 py-1 rounded border border-teal-100">${o.status}</span>
-                    </div>
+                    <p class="text-sm font-bold text-[#003652] leading-tight mb-2">${order.items.replace(/%0A/g, '<br>')}</p>
+                    <p class="text-md font-black">Total: ${order.total_price}</p>
                 </div>
             `).join('');
         }
     }
 
-    async function logout() {
-        await _supabase.auth.signOut();
-        window.location.href = 'index.html';
-    }
-
+    async function handleLogout() { await _supabase.auth.signOut(); window.location.href = 'index.html'; }
     window.onload = init;
 </script>
 </body>
