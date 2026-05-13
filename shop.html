@@ -200,18 +200,17 @@
     let isEditing = false;
     let tempQty = 1;
 
-    // Verify Admin Logic
+    // Dual Password Login
     function verifyAdmin() {
         const p = document.getElementById('adminPass').value;
-        if(p === '+2347036247597') { document.body.classList.add('can-upload'); closeModal('passModal'); }
-        else if(p === '07036247597') { document.body.classList.add('can-edit'); closeModal('passModal'); renderGrid(); }
+        if(p === '+2347036247597') { document.body.classList.add('can-upload'); closeModal('passModal'); alert("Upload Mode On"); }
+        else if(p === '07036247597') { document.body.classList.add('can-edit'); closeModal('passModal'); renderGrid(); alert("Edit Mode On"); }
         else { alert("Wrong Password"); }
     }
 
     // Load Items
     async function loadProducts() {
-        const { data, error } = await _supabase.from('products').select('*').order('created_at', { ascending: false });
-        document.getElementById('loading-text').style.display = 'none';
+        const { data } = await _supabase.from('products').select('*').order('created_at', { ascending: false });
         if (data) { allProducts = data; renderGrid(); }
     }
 
@@ -219,14 +218,14 @@
         const grid = document.getElementById('product-grid');
         grid.innerHTML = allProducts.map(p => `
             <div class="bg-white rounded-3xl border p-2 cursor-pointer shadow-sm relative group" onclick="viewProduct('${p.id}')">
-                <div class="edit-delete-only absolute top-2 right-2 z-20 flex flex-col gap-1">
-                    <button onclick="event.stopPropagation(); startEdit('${p.id}')" class="bg-blue-600 text-white p-1 rounded shadow text-[9px] font-bold">EDIT</button>
-                    <button onclick="event.stopPropagation(); deleteProduct('${p.id}')" class="bg-red-600 text-white p-1 rounded shadow text-[9px] font-bold">DEL</button>
+                <div class="edit-delete-only absolute top-1 right-1 z-20 flex flex-col gap-1">
+                    <button onclick="event.stopPropagation(); startEdit('${p.id}')" class="bg-blue-600 text-white p-1 rounded text-[10px]">EDIT</button>
+                    <button onclick="event.stopPropagation(); deleteProduct('${p.id}')" class="bg-red-600 text-white p-1 rounded text-[10px]">DEL</button>
                 </div>
                 <div class="h-44 md:h-60 bg-slate-50 rounded-2xl overflow-hidden mb-2">
-                    <img src="${p.image1}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/300'">
+                    <img src="${p.image1}" class="w-full h-full object-cover">
                 </div>
-                <div class="px-1"><h3 class="font-bold text-[11px] md:text-sm line-clamp-1">${p.name}</h3><p class="text-teal-600 font-black text-xs md:text-sm">₦${Number(p.price).toLocaleString()}</p></div>
+                <div class="px-1"><h3 class="font-bold text-sm line-clamp-1">${p.name}</h3><p class="text-teal-600 font-black">₦${Number(p.price).toLocaleString()}</p></div>
             </div>
         `).join('');
     }
@@ -236,23 +235,26 @@
         const images = [p.image1, p.image2, p.image3, p.image4, p.image5].filter(i => i);
         document.getElementById('modal-body').innerHTML = `
             <div>
-                <div class="aspect-square bg-slate-50 rounded-3xl overflow-hidden shadow-inner flex items-center justify-center">
+                <div class="aspect-square bg-slate-50 rounded-3xl overflow-hidden flex items-center justify-center">
                     <img src="${p.image1}" id="bigView" class="w-full h-full object-cover">
                 </div>
                 <div class="flex gap-2 mt-4 overflow-x-auto no-scrollbar">
-                    ${images.map(img => `<img src="${img}" onclick="document.getElementById('bigView').src='${img}'" class="w-16 h-16 object-cover rounded-xl border-2 border-slate-100 cursor-pointer hover:border-[#003652] transition">`).join('')}
+                    ${images.map(img => `<img src="${img}" onclick="document.getElementById('bigView').src='${img}'" class="w-16 h-16 object-cover rounded-xl border-2 border-slate-100 cursor-pointer hover:border-[#003652]">`).join('')}
                 </div>
             </div>
             <div class="flex flex-col">
-                <h2 class="text-2xl md:text-4xl font-black text-[#003652] mb-2 leading-tight">${p.name}</h2>
-                <p class="text-xl font-bold text-teal-600 mb-6 font-black">₦${Number(p.price).toLocaleString()}</p>
-                <div class="mb-6 bg-slate-50 p-3 rounded-2xl">
-                    <p class="text-[10px] font-bold text-slate-400 mb-2 uppercase">Quantity:</p>
-                    <div class="flex items-center gap-6"><button onclick="changeQty(-1)" class="w-10 h-10 bg-white shadow-sm border rounded-full font-black text-xl">-</button>
-                    <span id="qtyVal" class="font-black text-xl">1</span><button onclick="changeQty(1)" class="w-10 h-10 bg-white shadow-sm border rounded-full font-black text-xl">+</button></div>
+                <h2 class="text-2xl md:text-4xl font-black text-[#003652] mb-2">${p.name}</h2>
+                <p class="text-2xl font-black text-teal-600 mb-4">₦${Number(p.price).toLocaleString()}</p>
+                <div class="mb-4 bg-slate-50 p-3 rounded-2xl">
+                    <p class="text-[10px] font-bold text-slate-400 mb-2 uppercase tracking-widest">Select Quantity:</p>
+                    <div class="flex items-center gap-6">
+                        <button onclick="changeQty(-1)" class="w-10 h-10 bg-white border rounded-full font-black text-xl">-</button>
+                        <span id="qtyVal" class="font-black text-xl">1</span>
+                        <button onclick="changeQty(1)" class="w-10 h-10 bg-white border rounded-full font-black text-xl">+</button>
+                    </div>
                 </div>
-                <div class="overflow-y-auto max-h-[250px] mb-8 text-slate-600 text-sm whitespace-pre-wrap pr-2">${p.description || ''}</div>
-                <button onclick="commitAdd('${p.id}')" class="w-full py-5 bg-[#003652] text-white rounded-2xl font-black shadow-xl uppercase mt-auto">Add to Cart</button>
+                <div class="overflow-y-auto max-h-[150px] mb-6 text-slate-600 text-sm whitespace-pre-wrap">${p.description || ''}</div>
+                <button onclick="commitAdd('${p.id}')" class="w-full py-5 bg-[#003652] text-white rounded-2xl font-black shadow-lg uppercase">Add to Cart</button>
             </div>
         `;
         openModal('productModal');
@@ -268,32 +270,35 @@
     function updateCartUI() {
         document.getElementById('cart-count').innerText = cart.length;
         document.getElementById('cart-items').innerHTML = cart.map((item, idx) => `
-            <div class="flex gap-4 items-center bg-slate-50 p-3 rounded-2xl border"><img src="${item.image1}" class="w-14 h-14 object-cover rounded-xl">
-            <div class="flex-grow"><p class="font-bold text-xs">${item.name}</p><p class="text-teal-600 font-bold text-xs">₦${Number(item.price).toLocaleString()}</p></div>
-            <button onclick="removeItem(${idx})" class="text-red-500 material-symbols-outlined">delete</button></div>`).join('');
+            <div class="flex gap-4 items-center bg-slate-50 p-3 rounded-2xl border">
+                <img src="${item.image1}" class="w-14 h-14 object-cover rounded-xl">
+                <div class="flex-grow"><p class="font-bold text-xs">${item.name}</p><p class="text-teal-600 font-bold text-xs">₦${Number(item.price).toLocaleString()}</p></div>
+                <button onclick="removeItem(${idx})" class="text-red-500 material-symbols-outlined">delete</button>
+            </div>`).join('');
         const total = cart.reduce((s, i) => s + Number(i.price), 0);
         document.getElementById('cart-total').innerText = `₦${total.toLocaleString()}`;
     }
 
     async function deleteProduct(id) { if(confirm("Confirm Delete?")) { await _supabase.from('products').delete().eq('id', id); location.reload(); } }
+
     function startEdit(id) {
         const p = allProducts.find(x => x.id === id);
         isEditing = true; document.getElementById('adminTitle').innerText = "Edit Product"; document.getElementById('editId').value = p.id;
         document.getElementById('pName').value = p.name; document.getElementById('pPrice').value = p.price; document.getElementById('pDesc').value = p.description; openModal('adminModal');
     }
 
+    // UPLOAD FIX (NO LOADING HANG)
     document.getElementById('adminForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const upBtn = document.getElementById('upBtn'); upBtn.innerText = "UPLOADING..."; upBtn.disabled = true;
+        const upBtn = document.getElementById('upBtn'); upBtn.innerText = "SAVING..."; upBtn.disabled = true;
         const id = document.getElementById('editId').value;
         const urls = [];
         for(let i=1; i<=5; i++){
             const file = document.getElementById(`f${i}`).files[0];
             if(file){
                 const path = `uploads/${Date.now()}_${file.name}`;
-                const { data, error } = await _supabase.storage.from('product-images').upload(path, file);
+                const { data } = await _supabase.storage.from('product-images').upload(path, file);
                 if(data) urls.push(_supabase.storage.from('product-images').getPublicUrl(path).data.publicUrl);
-                else { alert("Storage Error: " + error.message); upBtn.disabled = false; return; }
             } else if(isEditing) { const p = allProducts.find(x => x.id === id); urls.push(p[`image${i}`]); }
         }
         const payload = {
@@ -305,18 +310,34 @@
         else { alert("Error: " + res.error.message); upBtn.disabled = false; upBtn.innerText = "Save Product"; }
     });
 
+    // CHECKOUT: SAVE TO DASHBOARD THEN WHATSAPP
+    document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const itemsList = cart.map(i => `• ${i.name} (₦${Number(i.price).toLocaleString()})`).join('%0A');
+        const total = document.getElementById('cart-total').innerText;
+        const name = document.getElementById('cName').value;
+
+        // Save to Database for Dashboard
+        const { data: { user } } = await _supabase.auth.getUser();
+        if(user) {
+            await _supabase.from('orders').insert([{
+                user_id: user.id,
+                customer_name: name,
+                items: itemsList,
+                total_price: total
+            }]);
+        }
+
+        const text = `*NEW ORDER RECEIVED*%0A%0A*Name:* ${name}%0A*Total:* ${total}%0A%0A*Items:*%0A${itemsList}%0A%0A_Receipt attached below._`;
+        window.open(`https://wa.me/2347036247597?text=${text}`, '_blank');
+    });
+
     function removeItem(idx) { cart.splice(idx, 1); updateCartUI(); }
     function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('active'); }
     function openModal(id) { document.getElementById(id).classList.add('active'); }
-    function closeModal(id) { document.getElementById(id).classList.remove('active'); isEditing = false; tempQty = 1; }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); isEditing = false; }
     function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('hidden'); }
-    function openCheckout() { if(cart.length > 0) { toggleCart(); openModal('checkoutModal'); } else alert("Empty"); }
-
-    document.getElementById('checkoutForm').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const text = `*NEW ORDER RECEIVED*%0A%0A*Name:* ${document.getElementById('cName').value}%0A*Phone:* ${document.getElementById('cPhone').value}%0A*Delivery:* ${document.getElementById('cAddress').value}%0A%0A*Total:* ${document.getElementById('cart-total').innerText}%0A%0A_Receipt attached below._`;
-        window.open(`https://wa.me/2347036247597?text=${text}`, '_blank');
-    });
+    function openCheckout() { if(cart.length > 0) { toggleCart(); openModal('checkoutModal'); } else alert("Cart empty"); }
 
     window.onload = loadProducts;
 </script>
