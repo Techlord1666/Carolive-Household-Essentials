@@ -10,117 +10,166 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     
     <style>
-        /* Fix Footer to Bottom */
-        body { min-height: 100vh; display: flex; flex-direction: column; }
+        body { min-height: 100vh; display: flex; flex-direction: column; background-color: #f8f9fa; margin: 0; }
         main { flex-grow: 1; }
-
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 5000; align-items: center; justify-content: center; padding: 15px; backdrop-filter: blur(5px); }
-        .modal.active { display: flex; }
-        .modal-content { background: white; padding: 25px; border-radius: 20px; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
         
-        #cart-sidebar { transform: translateX(100%); transition: transform 0.3s ease-in-out; }
+        /* Modals */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 5000; align-items: center; justify-content: center; padding: 15px; backdrop-filter: blur(8px); }
+        .modal.active { display: flex; }
+        .modal-content { background: white; padding: 25px; border-radius: 24px; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
+
+        /* Cart Sidebar */
+        #cart-sidebar { position: fixed; right: 0; top: 0; height: 100%; width: 100%; max-width: 400px; background: white; z-index: 6000; transform: translateX(100%); transition: 0.3s; padding: 20px; box-shadow: -5px 0 20px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
         #cart-sidebar.active { transform: translateX(0); }
+        
+        .product-card img { transition: transform 0.5s; }
+        .product-card:hover img { transform: scale(1.05); }
     </style>
 </head>
-<body class="bg-[#f8f9fa] text-[#191c1d] font-sans">
+<body>
 
-<!-- Header -->
-<header class="bg-white border-b sticky top-0 z-[1000]">
+<!-- Navigation -->
+<header class="bg-white border-b sticky top-0 z-[3000]">
     <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
-        <button onclick="toggleMenu()" class="flex items-center gap-1 text-[#003652] font-bold">
-            <span class="material-symbols-outlined text-3xl">menu</span>
-        </button>
-
+        <button onclick="toggleMenu()" class="text-[#003652]"><span class="material-symbols-outlined text-3xl">menu</span></button>
         <div class="flex flex-col items-center">
-            <h1 class="text-xl md:text-2xl font-black text-[#003652] italic leading-none">Carolive</h1>
-            <span class="text-[7px] tracking-[0.2em] font-bold text-teal-600 uppercase">Premium Home</span>
+            <h1 class="text-2xl font-black text-[#003652] italic leading-none">Carolive</h1>
+            <span class="text-[8px] tracking-[0.3em] font-bold text-teal-600 uppercase">Premium Home</span>
         </div>
-
-        <button onclick="toggleCart()" class="relative">
-            <span class="material-symbols-outlined text-3xl text-[#003652]">shopping_cart</span>
+        <button onclick="toggleCart()" class="relative text-[#003652]">
+            <span class="material-symbols-outlined text-3xl">shopping_cart</span>
             <span id="cart-count" class="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold">0</span>
         </button>
     </div>
 </header>
 
-<!-- Navigation Menu -->
-<div id="mobileMenu" class="hidden fixed inset-0 z-[1100] bg-white p-8 flex flex-col gap-6">
-    <button onclick="toggleMenu()" class="material-symbols-outlined text-3xl">close</button>
-    <a href="index.html" class="text-xl font-bold border-b pb-2">Home</a>
-    <a href="shop.html" class="text-xl font-bold border-b pb-2">Shop</a>
-    <a href="about.html" class="text-xl font-bold border-b pb-2">About Us</a>
-    <a href="#" class="text-xl font-bold border-b pb-2 text-teal-600">Sign Up</a>
+<!-- Mobile Menu -->
+<div id="mobileMenu" class="hidden fixed inset-0 z-[4000] bg-white p-10 flex flex-col gap-6">
+    <button onclick="toggleMenu()" class="material-symbols-outlined text-4xl self-end">close</button>
+    <a href="index.html" class="text-2xl font-bold border-b pb-2">Home</a>
+    <a href="shop.html" class="text-2xl font-bold border-b pb-2">Shop</a>
+    <a href="about.html" class="text-2xl font-bold border-b pb-2">About Us</a>
+    <a href="#" class="text-2xl font-bold border-b pb-2 text-teal-600">Sign Up</a>
 </div>
 
-<!-- Main Content -->
-<main class="max-w-7xl mx-auto px-4 py-10">
-    <h2 class="text-3xl font-black text-[#003652] mb-8 text-center md:text-left">Our Collection</h2>
+<main class="max-w-7xl mx-auto px-4 py-10 w-full">
+    <h2 class="text-3xl font-black text-[#003652] mb-10 text-center md:text-left">Shop Our Collection</h2>
     
-    <!-- Grid: 2 mobile, 5 laptop -->
+    <!-- Grid: 2 columns mobile, 5 columns laptop -->
     <div id="product-grid" class="grid grid-cols-2 lg:grid-cols-5 gap-4 md:gap-8">
-        <!-- Products will load here -->
+        <!-- Products load here -->
     </div>
 </main>
 
-<!-- Admin Password Modal -->
-<div id="passModal" class="modal">
-    <div class="modal-content text-center">
-        <h2 class="text-xl font-bold mb-4">Admin Access</h2>
-        <input type="password" id="adminPass" placeholder="Enter Password" class="w-full p-3 border rounded-xl mb-4">
-        <button onclick="verifyAdmin()" class="w-full py-3 bg-[#003652] text-white rounded-xl font-bold">Login</button>
-        <button onclick="closeModal('passModal')" class="mt-2 text-sm text-slate-400">Cancel</button>
+<!-- PRODUCT DETAIL MODAL (Gallery Style) -->
+<div id="productModal" class="modal" onclick="closeModal('productModal')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <div id="modal-body" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Content Injected by JS -->
+        </div>
     </div>
 </div>
 
-<!-- Admin Upload Modal -->
-<div id="adminModal" class="modal">
+<!-- CART SIDEBAR -->
+<div id="cart-sidebar">
+    <div class="flex justify-between items-center mb-6 border-b pb-4">
+        <h2 class="text-2xl font-bold">Your Cart</h2>
+        <button onclick="toggleCart()" class="material-symbols-outlined">close</button>
+    </div>
+    <div id="cart-items" class="flex-grow overflow-y-auto space-y-4"></div>
+    <div class="border-t pt-4 mt-4">
+        <div class="flex justify-between text-xl font-bold mb-6"><span>Total:</span><span id="cart-total">₦0</span></div>
+        <button onclick="openCheckout()" class="w-full py-4 bg-[#003652] text-white rounded-xl font-bold">CHECKOUT NOW</button>
+    </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div id="checkoutModal" class="modal">
     <div class="modal-content">
-        <h2 class="text-2xl font-bold mb-4">Upload New Product</h2>
-        <form id="adminForm" class="space-y-4">
-            <input type="text" id="pName" placeholder="Product Name" required class="w-full p-3 border rounded-xl">
-            <input type="number" id="pPrice" placeholder="Price (₦)" required class="w-full p-3 border rounded-xl">
-            <textarea id="pDesc" placeholder="Description" rows="3" class="w-full p-3 border rounded-xl"></textarea>
+        <h2 class="text-2xl font-black mb-4">Complete Your Order</h2>
+        <div class="bg-blue-50 p-5 rounded-2xl mb-6 border border-blue-100">
+            <p class="text-blue-800 font-bold mb-1">Company Bank Details:</p>
+            <p class="text-lg font-black text-[#003652]">Uba: 009118938</p>
+            <p class="font-bold text-[#003652]">Account Name: CAROLINE</p>
+        </div>
+        <form id="checkoutForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input type="text" id="cName" placeholder="Full Name" required class="p-4 border rounded-xl w-full">
+            <input type="text" id="cPhone" placeholder="Phone Number" required class="p-4 border rounded-xl w-full">
+            <input type="email" id="cEmail" placeholder="Email Address" required class="p-4 border rounded-xl w-full">
+            <input type="text" id="cAddress" placeholder="Full Delivery Address" required class="p-4 border rounded-xl w-full md:col-span-2">
             
-            <div class="space-y-2">
-                <p class="text-xs font-bold text-slate-500">Upload 5 Images (Main image first):</p>
-                <input type="file" id="file1" accept="image/*" class="w-full text-xs">
-                <input type="file" id="file2" accept="image/*" class="w-full text-xs">
-                <input type="file" id="file3" accept="image/*" class="w-full text-xs">
-                <input type="file" id="file4" accept="image/*" class="w-full text-xs">
-                <input type="file" id="file5" accept="image/*" class="w-full text-xs">
+            <div class="md:col-span-2">
+                <label class="flex items-center gap-3 bg-slate-100 p-4 rounded-xl cursor-pointer">
+                    <input type="checkbox" required class="w-5 h-5 text-[#003652] rounded">
+                    <span class="font-bold text-sm">I have made the payment into the account above</span>
+                </label>
+            </div>
+            
+            <div class="md:col-span-2">
+                <p class="text-xs font-bold text-slate-500 mb-2 uppercase">Upload Payment Receipt:</p>
+                <input type="file" id="receipt" accept="image/*" required class="w-full">
             </div>
 
-            <button type="submit" id="uploadBtn" class="w-full py-4 bg-teal-600 text-white rounded-xl font-bold">
-                <span id="btnText">UPLOAD PRODUCT</span>
+            <button type="submit" class="md:col-span-2 py-5 bg-green-600 text-white rounded-2xl font-black text-lg hover:bg-green-700">SEND ORDER TO WHATSAPP</button>
+        </form>
+        <button onclick="closeModal('checkoutModal')" class="mt-4 w-full text-slate-400 text-sm">Go Back</button>
+    </div>
+</div>
+
+<!-- ADMIN PASSWORD MODAL -->
+<div id="passModal" class="modal">
+    <div class="modal-content max-w-sm text-center">
+        <h2 class="text-xl font-bold mb-4 tracking-tight">Admin Authentication</h2>
+        <input type="password" id="adminPass" placeholder="Enter Admin Password" class="w-full p-4 border rounded-xl mb-4 text-center">
+        <button onclick="verifyAdmin()" class="w-full py-4 bg-[#003652] text-white rounded-xl font-bold">Log In</button>
+        <button onclick="closeModal('passModal')" class="mt-4 text-slate-400 text-xs">Cancel</button>
+    </div>
+</div>
+
+<!-- ADMIN UPLOAD MODAL -->
+<div id="adminModal" class="modal">
+    <div class="modal-content">
+        <h2 class="text-2xl font-black mb-6">Upload New Product</h2>
+        <form id="adminForm" class="space-y-4">
+            <input type="text" id="pName" placeholder="Product Name" required class="w-full p-4 border rounded-xl">
+            <input type="number" id="pPrice" placeholder="Price in Naira (₦)" required class="w-full p-4 border rounded-xl">
+            <textarea id="pDesc" placeholder="Product Description" rows="3" class="w-full p-4 border rounded-xl"></textarea>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="border p-3 rounded-xl"><p class="text-[10px] font-bold mb-1">MAIN IMAGE</p><input type="file" id="f1" accept="image/*" required></div>
+                <div class="border p-3 rounded-xl"><p class="text-[10px] font-bold mb-1">IMAGE 2</p><input type="file" id="f2" accept="image/*"></div>
+                <div class="border p-3 rounded-xl"><p class="text-[10px] font-bold mb-1">IMAGE 3</p><input type="file" id="f3" accept="image/*"></div>
+                <div class="border p-3 rounded-xl"><p class="text-[10px] font-bold mb-1">IMAGE 4</p><input type="file" id="f4" accept="image/*"></div>
+                <div class="border p-3 rounded-xl"><p class="text-[10px] font-bold mb-1">IMAGE 5</p><input type="file" id="f5" accept="image/*"></div>
+            </div>
+
+            <button type="submit" id="upBtn" class="w-full py-5 bg-teal-600 text-white rounded-2xl font-bold uppercase tracking-widest">
+                Upload to Store
             </button>
         </form>
     </div>
 </div>
 
-<!-- Footer (Fixed to bottom) -->
-<footer class="bg-[#0b101a] text-white pt-12 pb-8 px-6">
-    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
-        <div>
-            <h3 class="text-2xl font-black italic">Carolive</h3>
-            <p class="text-slate-500 text-xs mt-2">© 2025 Carolive Store Nigeria.</p>
+<!-- Footer -->
+<footer class="bg-[#0b101a] text-white pt-16 pb-8 px-6 mt-10">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+        <div class="text-center md:text-left">
+            <h3 class="text-3xl font-black italic">Carolive</h3>
+            <p class="text-slate-500 text-sm mt-2">© 2025 Carolive Store Nigeria. Reliable Quality.</p>
         </div>
-        <!-- Admin Hidden Trigger -->
-        <span onclick="openModal('passModal')" class="cursor-default opacity-10 text-[10px] hover:opacity-100 transition">admin</span>
+        <div class="flex gap-10 text-sm font-bold text-slate-400">
+            <button onclick="openModal('privacyModal')">Privacy</button>
+            <button onclick="openModal('termsModal')">Terms</button>
+            <button onclick="openModal('refundModal')">Refunds</button>
+        </div>
+        <!-- Hidden Admin Text -->
+        <span onclick="openModal('passModal')" class="cursor-pointer opacity-10 text-[10px] hover:opacity-100 transition">admin</span>
     </div>
 </footer>
 
-<!-- Standard Cart/Product Modals remain same as previous version -->
-<div id="productModal" class="modal" onclick="closeModal('productModal')"><div class="modal-content" onclick="event.stopPropagation()"><div id="modal-body" class="flex flex-col gap-6"></div></div></div>
-<div id="cart-overlay" class="fixed inset-0 bg-black/50 z-[2000] hidden" onclick="toggleCart()"></div>
-<div id="cart-sidebar" class="fixed right-0 top-0 h-full w-80 md:w-96 bg-white z-[2001] p-6 shadow-2xl overflow-y-auto">
-    <h2 class="text-2xl font-bold mb-8 border-b pb-4">Your Cart</h2>
-    <div id="cart-items" class="space-y-4 mb-8"></div>
-    <div class="border-t pt-4"><div class="flex justify-between text-xl font-bold mb-6"><span>Total:</span><span id="cart-total">₦0</span></div>
-    <button onclick="openCheckout()" class="w-full py-4 bg-[#003652] text-white rounded-xl font-bold">PROCEED TO CHECKOUT</button></div>
-</div>
-
 <script>
+    // Supabase Config
     const supabaseUrl = 'https://bfeicdnalzokkutpkwki.supabase.co';
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmZWljZG5hbHpva2t1dHBrd2tpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NzY2NDIsImV4cCI6MjA5NDI1MjY0Mn0.lK42cRXm_ulcwiSPah3Tg_z3Uwp4WpcIlu_VSYnWVNE';
     const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
@@ -128,136 +177,119 @@
     let allProducts = [];
     let cart = [];
 
-    // Admin Password Verification
+    // Admin Access
     function verifyAdmin() {
-        const pass = document.getElementById('adminPass').value;
-        if(pass === '+2347036247597') {
+        if(document.getElementById('adminPass').value === '+2347036247597') {
             closeModal('passModal');
             openModal('adminModal');
-        } else {
-            alert("Incorrect Password");
-        }
+        } else { alert("Wrong password"); }
     }
 
     // Load Products
     async function loadProducts() {
         const { data } = await _supabase.from('products').select('*').order('created_at', { ascending: false });
-        if (data) { allProducts = data; renderProducts(); }
+        if (data) { allProducts = data; renderGrid(); }
     }
 
-    function renderProducts() {
+    function renderGrid() {
         const grid = document.getElementById('product-grid');
         grid.innerHTML = allProducts.map(p => `
-            <div class="bg-white rounded-2xl shadow-sm border p-2 cursor-pointer" onclick="viewProduct('${p.id}')">
-                <img src="${p.image1}" class="h-40 md:h-52 w-full object-cover rounded-xl mb-2">
-                <h3 class="font-bold text-xs md:text-sm line-clamp-1">${p.name}</h3>
-                <p class="text-teal-600 font-bold text-sm">₦${Number(p.price).toLocaleString()}</p>
+            <div class="product-card bg-white rounded-3xl shadow-sm border p-2 cursor-pointer" onclick="viewProduct('${p.id}')">
+                <div class="overflow-hidden rounded-2xl h-44 md:h-60 mb-3"><img src="${p.image1}" class="w-full h-full object-cover"></div>
+                <div class="px-2 pb-2">
+                    <h3 class="font-bold text-sm line-clamp-1 text-[#003652]">${p.name}</h3>
+                    <p class="text-teal-600 font-black">₦${Number(p.price).toLocaleString()}</p>
+                </div>
             </div>
         `).join('');
     }
 
-    // Admin Upload Logic (Image File to URL)
-    document.getElementById('adminForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const btn = document.getElementById('uploadBtn');
-        const btnText = document.getElementById('btnText');
-        btnText.innerText = "UPLOADING...";
-        btn.disabled = true;
-
-        const imageUrls = [];
-        for (let i = 1; i <= 5; i++) {
-            const fileInput = document.getElementById(`file${i}`);
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                const fileExt = file.name.split('.').pop();
-                const fileName = `${Math.random()}.${fileExt}`;
-                const filePath = `products/${fileName}`;
-
-                const { data, error } = await _supabase.storage
-                    .from('product-images')
-                    .upload(filePath, file);
-
-                if (data) {
-                    const { data: urlData } = _supabase.storage.from('product-images').getPublicUrl(filePath);
-                    imageUrls.push(urlData.publicUrl);
-                }
-            }
-        }
-
-        const product = {
-            name: document.getElementById('pName').value,
-            price: document.getElementById('pPrice').value,
-            description: document.getElementById('pDesc').value,
-            image1: imageUrls[0] || null,
-            image2: imageUrls[1] || null,
-            image3: imageUrls[2] || null,
-            image4: imageUrls[3] || null,
-            image5: imageUrls[4] || null
-        };
-
-        const { error } = await _supabase.from('products').insert([product]);
-        
-        if (!error) {
-            alert("Product Uploaded Successfully!");
-            location.reload();
-        } else {
-            alert("Error: " + error.message);
-            btn.disabled = false;
-            btnText.innerText = "UPLOAD PRODUCT";
-        }
-    });
-
-    // Navigation & UI Helpers
+    // Product View & Gallery Functionality
     function viewProduct(id) {
         const p = allProducts.find(x => x.id === id);
+        const images = [p.image1, p.image2, p.image3, p.image4, p.image5].filter(i => i && i !== 'null');
+        
         document.getElementById('modal-body').innerHTML = `
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <img src="${p.image1}" id="mainView" class="w-full h-72 object-cover rounded-2xl mb-4">
-                    <div class="flex gap-2 overflow-x-auto no-scrollbar">
-                        ${[p.image1, p.image2, p.image3, p.image4, p.image5].filter(i => i).map(img => `
-                            <img src="${img}" onclick="document.getElementById('mainView').src='${img}'" class="w-16 h-16 object-cover rounded-lg cursor-pointer border">
-                        `).join('')}
-                    </div>
+            <div class="space-y-4">
+                <img src="${p.image1}" id="bigView" class="w-full h-72 md:h-96 object-cover rounded-3xl shadow-md">
+                <div class="flex gap-2 overflow-x-auto no-scrollbar pb-2">
+                    ${images.map(img => `<img src="${img}" onclick="document.getElementById('bigView').src='${img}'" class="w-20 h-20 object-cover rounded-xl border-2 border-transparent cursor-pointer hover:border-[#003652]">`).join('')}
                 </div>
-                <div>
-                    <h2 class="text-2xl font-black text-[#003652] mb-2">${p.name}</h2>
-                    <p class="text-xl font-bold text-teal-600 mb-4">₦${Number(p.price).toLocaleString()}</p>
-                    <p class="text-slate-600 text-sm mb-6">${p.description || ''}</p>
-                    <button onclick="addToCart('${p.id}'); closeModal('productModal')" class="w-full py-4 bg-[#003652] text-white rounded-xl font-bold">ADD TO CART</button>
-                </div>
+            </div>
+            <div class="flex flex-col justify-center">
+                <h2 class="text-3xl font-black text-[#003652] mb-2 leading-tight">${p.name}</h2>
+                <p class="text-2xl font-black text-teal-600 mb-6">₦${Number(p.price).toLocaleString()}</p>
+                <div class="bg-slate-50 p-4 rounded-2xl mb-8 text-slate-600 text-sm leading-relaxed">${p.description || 'Premium quality essential.'}</div>
+                <button onclick="addToCart('${p.id}'); closeModal('productModal')" class="w-full py-5 bg-[#003652] text-white rounded-2xl font-black shadow-xl">ADD TO CART</button>
             </div>
         `;
         openModal('productModal');
     }
 
+    // Cart System
     function addToCart(id) {
-        const p = allProducts.find(x => x.id === id);
-        cart.push(p);
-        updateCartUI();
+        cart.push(allProducts.find(x => x.id === id));
+        updateCart();
         toggleCart();
     }
-
-    function updateCartUI() {
+    function updateCart() {
         document.getElementById('cart-count').innerText = cart.length;
-        document.getElementById('cart-items').innerHTML = cart.map((item, index) => `
-            <div class="flex gap-4 items-center border-b pb-2">
-                <img src="${item.image1}" class="w-12 h-12 object-cover rounded">
-                <div class="flex-grow"><p class="text-xs font-bold">${item.name}</p><p class="text-xs text-teal-600">₦${Number(item.price).toLocaleString()}</p></div>
-                <button onclick="removeFromCart(${index})" class="text-red-500 material-symbols-outlined text-sm">delete</button>
+        document.getElementById('cart-items').innerHTML = cart.map((item, idx) => `
+            <div class="flex gap-4 items-center bg-slate-50 p-3 rounded-2xl">
+                <img src="${item.image1}" class="w-16 h-16 object-cover rounded-xl">
+                <div class="flex-grow"><p class="font-bold text-sm">${item.name}</p><p class="text-teal-600 font-bold">₦${Number(item.price).toLocaleString()}</p></div>
+                <button onclick="removeItem(${idx})" class="text-red-500 material-symbols-outlined">delete</button>
             </div>
         `).join('');
-        const total = cart.reduce((sum, item) => sum + Number(item.price), 0);
+        const total = cart.reduce((s, i) => s + Number(i.price), 0);
         document.getElementById('cart-total').innerText = `₦${total.toLocaleString()}`;
     }
+    function removeItem(idx) { cart.splice(idx, 1); updateCart(); }
+    function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('active'); }
 
-    function removeFromCart(index) { cart.splice(index, 1); updateCartUI(); }
-    function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('active'); document.getElementById('cart-overlay').classList.toggle('hidden'); }
+    // Admin Upload Logic
+    document.getElementById('adminForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const upBtn = document.getElementById('upBtn');
+        upBtn.innerText = "UPLOADING..."; upBtn.disabled = true;
+
+        const urls = [];
+        for(let i=1; i<=5; i++){
+            const file = document.getElementById(`f${i}`).files[0];
+            if(file){
+                const path = `uploads/${Date.now()}_${file.name}`;
+                const { data } = await _supabase.storage.from('product-images').upload(path, file);
+                if(data) urls.push(_supabase.storage.from('product-images').getPublicUrl(path).data.publicUrl);
+            }
+        }
+
+        const { error } = await _supabase.from('products').insert([{
+            name: document.getElementById('pName').value,
+            price: document.getElementById('pPrice').value,
+            description: document.getElementById('pDesc').value,
+            image1: urls[0], image2: urls[1], image3: urls[2], image4: urls[3], image5: urls[4]
+        }]);
+
+        if(!error) { alert("Done!"); location.reload(); }
+        else { alert("Error: " + error.message); upBtn.disabled = false; upBtn.innerText = "Upload to Store"; }
+    });
+
+    // Checkout & WhatsApp
+    document.getElementById('checkoutForm').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const items = cart.map(i => `• ${i.name} (₦${Number(i.price).toLocaleString()})`).join('%0A');
+        const text = `*NEW ORDER RECEIVED*%0A%0A*Customer:* ${document.getElementById('cName').value}%0A*Phone:* ${document.getElementById('cPhone').value}%0A*Address:* ${document.getElementById('cAddress').value}%0A%0A*Items:*%0A${items}%0A%0A*Total:* ${document.getElementById('cart-total').innerText}%0A%0A_I have made the payment. My receipt is attached below._`;
+        window.open(`https://wa.me/2347036247597?text=${text}`, '_blank');
+    });
+
+    // Global Helpers
     function openModal(id) { document.getElementById(id).classList.add('active'); }
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
     function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('hidden'); }
+    function openCheckout() { if(cart.length > 0) { toggleCart(); openModal('checkoutModal'); } else alert("Cart is empty"); }
 
     window.onload = loadProducts;
 </script>
+
 </body>
 </html>
