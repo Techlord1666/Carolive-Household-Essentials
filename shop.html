@@ -3,50 +3,52 @@
 <head>
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-    <title>Shop - Carolive Store Nigeria</title>
+    <title>Shop Collection - Carolive Store</title>
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Material+Symbols+Outlined:wght@100..700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
     <style>
-        html, body { height: 100%; margin: 0; padding: 0; overflow-x: hidden; background-color: #f8f9fa; display: flex; flex-direction: column; }
-        main { flex: 1 0 auto; width: 100%; }
-        footer { flex-shrink: 0; width: 100%; }
+        html, body { height: 100%; margin: 0; padding: 0; width: 100%; overflow-x: hidden; background-color: #fcfcfc; display: flex; flex-direction: column; }
+        main { flex: 1 0 auto; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
-        /* Modal & Sidebar UI */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 9000; align-items: center; justify-content: center; padding: 12px; backdrop-filter: blur(15px); }
+        /* Modal - Professional & Fitted */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 9000; align-items: center; justify-content: center; padding: 12px; backdrop-filter: blur(10px); }
         .modal.active { display: flex !important; }
-        .modal-content { background: white; padding: 25px; border-radius: 28px; width: 100%; max-width: 1000px; max-height: 94vh; overflow-y: auto; position: relative; }
+        .modal-content { background: white; border-radius: 20px; width: 100%; max-width: 1000px; max-height: 92vh; overflow-y: auto; position: relative; }
 
-        #cart-sidebar { position: fixed; right: 0; top: 0; height: 100%; width: 100%; max-width: 400px; background: white; z-index: 8000; transform: translateX(100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 24px; display: flex; flex-direction: column; box-shadow: -10px 0 40px rgba(0,0,0,0.1); }
+        /* Cart Sidebar */
+        #cart-sidebar { position: fixed; right: 0; top: 0; height: 100%; width: 100%; max-width: 380px; background: white; z-index: 10000; transform: translateX(100%); transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 20px; display: flex; flex-direction: column; box-shadow: -10px 0 30px rgba(0,0,0,0.1); }
         #cart-sidebar.active { transform: translateX(0); }
-        #cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 7999; display: none; backdrop-filter: blur(4px); }
+        #cart-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; display: none; }
         #cart-overlay.active { display: block; }
 
-        .cat-btn.active { background: #003652; color: white; border-color: #003652; transform: scale(1.05); }
+        /* Professional Category Pills */
+        .cat-pill { padding: 8px 18px; border-radius: 50px; font-weight: 700; font-size: 11px; text-transform: uppercase; border: 1px solid #e2e8f0; white-space: nowrap; transition: 0.3s; background: #fff; color: #64748b; }
+        .cat-pill.active { background: #003652; color: white; border-color: #003652; }
+
+        /* Admin UI */
         .upload-only, .edit-delete-only { display: none !important; }
         body.can-upload .upload-only { display: flex !important; }
         body.can-edit .edit-delete-only { display: flex !important; }
 
-        .ai-trigger { position: fixed; bottom: 20px; right: 20px; width: 60px; height: 60px; background: #003652; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; z-index: 7000; border: 3px solid white; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        /* Hero Text Shadow for readability */
+        .hero-text { text-shadow: 0 2px 10px rgba(0,0,0,0.3); }
     </style>
 </head>
 <body class="font-sans text-slate-900">
 
-<!-- AI TRIGGER -->
-<div class="ai-trigger" onclick="aiTalk('I want to see your store products')"><span class="material-symbols-outlined text-3xl">chat</span></div>
-
 <!-- Header -->
-<header class="bg-white border-b sticky top-0 z-[7500] h-16 flex items-center shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 w-full flex justify-between items-center">
-        <button onclick="toggleMenu()" class="text-[#003652] p-2 hover:bg-slate-50 rounded-full transition"><span class="material-symbols-outlined text-3xl">menu</span></button>
+<header class="bg-white border-b sticky top-0 z-[8000]">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex justify-between items-center">
+        <button onclick="toggleMenu()" class="text-[#003652]"><span class="material-symbols-outlined text-3xl">menu</span></button>
         <div class="flex flex-col items-center">
-            <h1 class="text-xl md:text-2xl font-black text-[#003652] italic leading-none tracking-tighter">CAROLIVE</h1>
-            <span class="text-[7px] tracking-[0.3em] font-bold text-teal-600 uppercase">Premium Home Essentials</span>
+            <h1 class="text-xl md:text-2xl font-black text-[#003652] italic leading-none">Carolive</h1>
+            <span class="text-[7px] tracking-[0.2em] font-bold text-teal-600 uppercase">Premium Home</span>
         </div>
-        <button onclick="toggleCart()" class="relative text-[#003652] p-2">
+        <button onclick="toggleCart()" class="relative text-[#003652]">
             <span class="material-symbols-outlined text-3xl">shopping_basket</span>
-            <span id="cart-count" class="absolute top-1 right-1 bg-red-600 text-white text-[9px] w-5 h-5 flex items-center justify-center rounded-full font-black border-2 border-white">0</span>
+            <span id="cart-count" class="absolute -top-1 -right-1 bg-red-600 text-white text-[9px] w-4 h-4 flex items-center justify-center rounded-full font-bold">0</span>
         </button>
     </div>
 </header>
@@ -54,58 +56,59 @@
 <!-- Mobile Menu -->
 <div id="mobileMenu" class="hidden fixed inset-0 z-[11000] bg-white p-10 flex flex-col gap-6 shadow-2xl">
     <button onclick="toggleMenu()" class="material-symbols-outlined text-4xl self-end text-slate-300">close</button>
-    <a href="index.html" class="text-3xl font-black border-b pb-4 text-[#003652]">Home</a>
-    <a href="shop.html" class="text-3xl font-black border-b pb-4 text-teal-600">Shop Collection</a>
-    <a href="about.html" class="text-3xl font-black border-b pb-4 text-[#003652]">About Us</a>
+    <a href="index.html" class="text-2xl font-bold border-b pb-2 text-[#003652]">Home</a>
+    <a href="shop.html" class="text-2xl font-bold border-b pb-2 text-teal-600">Shop Collection</a>
+    <a href="about.html" class="text-2xl font-bold border-b pb-2 text-[#003652]">About Us</a>
 </div>
 
 <main>
     <!-- Store Hero -->
-    <section class="relative h-[250px] md:h-[450px] w-full overflow-hidden bg-slate-900">
+    <section class="relative h-[250px] md:h-[450px] w-full overflow-hidden bg-slate-100">
         <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1400" class="w-full h-full object-cover brightness-50">
-        <div class="absolute inset-0 flex flex-col items-center justify-center text-white px-6 text-center">
-            <h2 class="text-4xl md:text-7xl font-black mb-4 uppercase italic tracking-tighter">Shop Collection</h2>
-            <p class="text-sm md:text-xl opacity-90 max-w-xl font-bold uppercase tracking-widest leading-none">Reliable Quality For Modern Nigerians</p>
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-white px-4 text-center">
+            <h2 class="text-3xl md:text-6xl font-black mb-2 uppercase italic hero-text">Shop Collection</h2>
+            <p class="text-xs md:text-lg opacity-90 font-bold uppercase tracking-widest hero-text">Reliable Quality for Modern Nigerians</p>
         </div>
     </section>
 
-    <!-- New Arrivals Banner -->
-    <section id="new-arrivals-banner" class="bg-teal-50 py-10 px-4 hidden border-b border-teal-100">
+    <!-- NEW ARRIVALS -->
+    <section id="new-arrivals-banner" class="bg-teal-50 py-6 px-4 hidden border-b">
         <div class="max-w-7xl mx-auto">
-            <h2 class="text-xl font-black text-[#003652] mb-6 uppercase italic tracking-tighter">🔥 New Arrivals</h2>
-            <div id="new-arrivals-grid" class="flex gap-4 overflow-x-auto no-scrollbar pb-2"></div>
+            <h2 class="text-sm font-black text-[#003652] mb-4 uppercase tracking-widest italic">🔥 New Arrivals</h2>
+            <div id="new-arrivals-grid" class="flex gap-4 overflow-x-auto no-scrollbar"></div>
         </div>
     </section>
 
-    <!-- Categories Switcher -->
-    <section class="max-w-7xl mx-auto px-4 mt-12">
-        <div class="flex gap-3 overflow-x-auto no-scrollbar pb-4 border-b border-slate-100">
-            <button onclick="filterCat('All')" class="cat-btn active">All Items</button>
-            <button onclick="filterCat('Kitchen Appliances')" class="cat-btn">Kitchen Appliances</button>
-            <button onclick="filterCat('Home Essentials')" class="cat-btn">Home Essentials</button>
-            <button onclick="filterCat('Health & Personal Care')" class="cat-btn">Health & Care</button>
-            <button onclick="filterCat('Electronics & Gadgets')" class="cat-btn">Electronics</button>
-            <button onclick="filterCat('Home & Living')" class="cat-btn">Home & Living</button>
-            <button onclick="filterCat('Beauty and fashion accessories')" class="cat-btn">Beauty & Fashion</button>
-            <button onclick="filterCat('Back to school items')" class="cat-btn">Back to School</button>
-            <button onclick="filterCat('kids and baby')" class="cat-btn">Kids & Baby</button>
-            <button onclick="filterCat('Gift items')" class="cat-btn">Gift items</button>
+    <!-- CATEGORY PILLS - FIXED LOOK -->
+    <section class="max-w-7xl mx-auto px-4 mt-8">
+        <div class="flex gap-2 overflow-x-auto no-scrollbar pb-4">
+            <button onclick="filterCat('All')" class="cat-pill active">All Items</button>
+            <button onclick="filterCat('Kitchen Appliances')" class="cat-pill">Kitchen Appliances</button>
+            <button onclick="filterCat('Home Essentials')" class="cat-pill">Home Essentials</button>
+            <button onclick="filterCat('Health & Personal Care')" class="cat-pill">Health & Care</button>
+            <button onclick="filterCat('Electronics & Gadgets')" class="cat-pill">Electronics</button>
+            <button onclick="filterCat('Beauty and fashion accessories')" class="cat-pill">Beauty & Fashion</button>
+            <button onclick="filterCat('Back to school items')" class="cat-pill">Back to School</button>
+            <button onclick="filterCat('kids and baby')" class="cat-pill">Kids & Baby</button>
+            <button onclick="filterCat('Gift items')" class="cat-pill">Gift items</button>
         </div>
     </section>
 
-    <!-- Main Product Grid -->
-    <div class="max-w-7xl mx-auto px-4 py-12">
-        <div class="flex justify-between items-center mb-12">
-            <h3 id="current-cat-title" class="text-2xl font-black text-[#003652] uppercase tracking-tighter">Our Store</h3>
-            <button onclick="openModal('adminModal')" class="upload-only bg-[#003652] text-white px-8 py-3 rounded-full font-black text-[10px] uppercase shadow-xl tracking-widest">+ Add New Product</button>
+    <!-- Product Grid -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-8">
+            <h3 id="current-cat-title" class="text-xl font-black text-[#003652] uppercase">Our Collection</h3>
+            <button onclick="openModal('adminModal')" class="upload-only bg-[#003652] text-white px-5 py-2 rounded-full font-bold text-[10px] uppercase shadow-lg">+ ADD PRODUCT</button>
         </div>
-        <div id="product-grid" class="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-8 mb-20 min-h-[500px]"></div>
+        <div id="product-grid" class="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-8 mb-16">
+            <p class="col-span-full text-center py-20 text-slate-400 font-bold">Loading Store...</p>
+        </div>
         
         <!-- Pagination -->
-        <div id="pagination-box" class="flex justify-center items-center gap-4 py-12 border-t border-slate-100">
-            <button onclick="changePage(-1)" id="prevBtn" class="w-12 h-12 border-2 border-slate-200 rounded-full flex items-center justify-center font-black disabled:opacity-20"><</button>
-            <div id="page-numbers" class="flex gap-2"></div>
-            <button onclick="changePage(1)" id="nextBtn" class="w-12 h-12 border-2 border-slate-200 rounded-full flex items-center justify-center font-black disabled:opacity-20">></button>
+        <div class="flex justify-center items-center gap-4 py-10 border-t">
+            <button onclick="changePage(-1)" id="prevBtn" class="w-10 h-10 border-2 rounded-full font-black disabled:opacity-20"><</button>
+            <span id="pageInfo" class="font-bold text-[10px] uppercase text-slate-400">Page 1</span>
+            <button onclick="changePage(1)" id="nextBtn" class="w-10 h-10 border-2 rounded-full font-black disabled:opacity-20">></button>
         </div>
     </div>
 </main>
@@ -113,93 +116,86 @@
 <!-- PRODUCT MODAL -->
 <div id="productModal" class="modal" onclick="closeModal('productModal')">
     <div class="modal-content !max-w-4xl p-5 md:p-10" onclick="event.stopPropagation()">
-        <button onclick="closeModal('productModal')" class="absolute top-4 right-4 z-20 bg-slate-100 rounded-full p-2"><span class="material-symbols-outlined">close</span></button>
-        <div id="modal-body" class="grid grid-cols-1 md:grid-cols-2 gap-10"></div>
+        <button onclick="closeModal('productModal')" class="absolute top-4 right-4 z-20 bg-slate-50 rounded-full p-2"><span class="material-symbols-outlined">close</span></button>
+        <div id="modal-body" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
     </div>
 </div>
 
-<!-- CHECKOUT MODAL -->
+<!-- CHECKOUT MODAL (FORMAL LOOK RESTORED) -->
 <div id="checkoutModal" class="modal">
-    <div class="modal-content !max-w-6xl">
-        <div id="checkout-main-view">
-            <h2 class="text-3xl font-black mb-8 text-[#003652] border-b pb-4 uppercase tracking-tighter">Billing & Checkout</h2>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 text-slate-900">
+    <div class="modal-content !max-w-5xl">
+        <div id="checkout-main-view" class="p-6 md:p-10">
+            <h2 class="text-2xl font-black mb-8 text-[#003652] uppercase border-b pb-4">Billing & Shipping</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                
                 <div class="space-y-6">
-                    <div class="flex gap-3 mb-4 p-2 bg-slate-100 rounded-3xl">
-                        <button onclick="setPayMethod('Transfer')" id="btnTransfer" class="w-1/2 py-4 rounded-2xl font-black text-[11px] uppercase transition-all shadow-xl bg-[#003652] text-white">Bank Transfer</button>
-                        <button onclick="setPayMethod('POD')" id="btnPOD" class="w-1/2 py-4 rounded-2xl font-black text-[11px] uppercase transition-all">Pay on Delivery</button>
+                    <div class="flex gap-2 p-1.5 bg-slate-100 rounded-2xl">
+                        <button onclick="setPayMethod('Transfer')" id="btnTransfer" class="w-1/2 py-3 rounded-xl font-bold text-[10px] uppercase shadow-sm transition-all bg-[#003652] text-white">Transfer</button>
+                        <button onclick="setPayMethod('POD')" id="btnPOD" class="w-1/2 py-3 rounded-xl font-bold text-[10px] uppercase transition-all text-slate-400">Cash on Delivery</button>
                     </div>
 
-                    <div id="bank-box" class="bg-blue-600 text-white p-8 rounded-[2rem] shadow-2xl border-2 border-white/20">
-                        <p class="text-[10px] font-bold uppercase mb-2 tracking-widest opacity-80">Official Payment Channel:</p>
-                        <p class="text-3xl font-black leading-none">OPAY: 7036247597</p>
-                        <p class="font-bold text-sm mt-2">CAROLINE ONYEKACHI AMADI</p>
+                    <div id="bank-box" class="bg-[#003652] text-white p-6 rounded-3xl shadow-lg border-l-4 border-teal-400">
+                        <p class="text-[9px] font-bold uppercase tracking-widest opacity-70 mb-1">Official Account:</p>
+                        <p class="text-2xl font-black">OPAY: 7036247597</p>
+                        <p class="font-bold text-xs uppercase">Caroline Onyekachi Amadi</p>
                     </div>
 
-                    <form id="checkoutForm" class="grid grid-cols-1 md:grid-cols-2 gap-5 text-sm font-bold text-[#003652]">
-                        <input type="text" id="fName" placeholder="First Name *" required class="p-4 border rounded-2xl w-full border-slate-200">
-                        <input type="text" id="lName" placeholder="Last Name *" required class="p-4 border rounded-2xl w-full border-slate-200">
-                        <input type="text" id="street" placeholder="Street Address *" required class="p-4 border rounded-2xl w-full md:col-span-2 border-slate-200">
+                    <form id="checkoutForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm font-bold text-[#003652]">
+                        <input type="text" id="fName" placeholder="First Name *" required class="p-4 border border-slate-200 rounded-xl w-full">
+                        <input type="text" id="lName" placeholder="Last Name *" required class="p-4 border border-slate-200 rounded-xl w-full">
+                        <input type="text" id="phone" placeholder="WhatsApp Number *" required class="p-4 border border-slate-200 rounded-xl w-full">
+                        <input type="email" id="email" placeholder="Email Address *" required class="p-4 border border-slate-200 rounded-xl w-full">
+                        <input type="text" id="cAddress" placeholder="Full Home Address *" required class="md:col-span-2 p-4 border border-slate-200 rounded-xl w-full">
                         
                         <div class="md:col-span-2">
-                            <label class="text-[10px] font-black text-slate-400 uppercase mb-2 block tracking-widest">Select Your State / Area *</label>
-                            <select id="shipState" onchange="calculateShipping()" class="w-full p-4 border rounded-2xl bg-white font-black text-[#003652] border-slate-200" required>
-                                <option value="">Select Location</option>
-                                <optgroup label="LAGOS (₦2,000)"> <option value="2000">Alaba int’l / Volks / Ilufe Ajangbadi / Shibiri Ilogbo</option></optgroup>
-                                <optgroup label="LAGOS (₦3,000)"> <option value="3000">Lasu / Agric / Egbeda / Mile 2 / Festac / Ikorodu Car</option></optgroup>
-                                <optgroup label="LAGOS (₦4,000)"> <option value="4000">Ikeja / Surulere / Oshodi / Yaba / Maryland / Mainland</option></optgroup>
-                                <optgroup label="NIGERIA STATES (₦5,500)"> <option value="5500">Other Nigerian States (Abia, Abuja, Rivers, etc.)</option></optgroup>
+                            <label class="text-[9px] font-black text-slate-400 uppercase mb-1 block">Shipping Location *</label>
+                            <select id="shipState" onchange="calculateShipping()" class="w-full p-4 border border-slate-200 rounded-xl bg-white font-black text-[#003652]" required>
+                                <option value="">Select State / Area</option>
+                                <optgroup label="LAGOS City (₦2,000)"> <option value="2000">Alaba int / Volks / Ilufe / Shibiri</option></optgroup>
+                                <optgroup label="LAGOS Zone (₦3,000)"> <option value="3000">Lasu / Agric / Egbeda / Igando / Mile 2 / Festac</option></optgroup>
+                                <optgroup label="LAGOS Mainland (₦4,000)"> <option value="4000">Ikeja / Surulere / Oshodi / Gbagada / Yaba</option></optgroup>
+                                <optgroup label="LAGOS Premium (₦4,500 - ₦7,000)"> <option value="4500">Lekki Ph1 / Ikoyi / VI</option><option value="6000">Ajah / Lekki Ph2</option><option value="7000">Sangotedo / Epe</option></optgroup>
+                                <optgroup label="NIGERIA STATES (₦5,500)"> <option value="5500">Other 35 States (Abuja, PH, Kano etc.)</option></optgroup>
                             </select>
                         </div>
 
-                        <input type="text" id="phone" placeholder="WhatsApp Number *" required class="p-4 border rounded-2xl w-full border-slate-200">
-                        <input type="email" id="email" placeholder="Email Address *" required class="p-4 border rounded-2xl w-full border-slate-200">
-                        
-                        <div id="receipt-upload-box" class="md:col-span-2 p-6 bg-slate-50 rounded-[2rem] border-2 border-dashed border-slate-200 text-center">
-                            <p class="text-[10px] font-black uppercase text-slate-500 mb-2 tracking-widest">Upload Payment Receipt Screenshot *</p>
-                            <input type="file" id="receiptFile" accept="image/*" class="text-xs font-medium">
+                        <div id="receipt-upload-box" class="md:col-span-2 p-5 bg-slate-50 rounded-2xl border-2 border-dashed text-center">
+                            <p class="text-[10px] font-black uppercase text-slate-400 mb-2">Upload Transfer Receipt *</p>
+                            <input type="file" id="receiptFile" accept="image/*" class="text-xs mx-auto block">
                         </div>
 
-                        <div class="md:col-span-2 pt-6">
-                            <button type="submit" id="submitOrderBtn" class="w-full py-6 bg-[#003652] text-white rounded-[2rem] font-black text-xl shadow-2xl hover:bg-black transition-all transform active:scale-95 uppercase">Process My Order</button>
-                            <button type="button" onclick="closeModal('checkoutModal')" class="w-full py-3 text-red-500 font-bold text-[10px] uppercase tracking-widest hover:underline mt-2">Cancel Order</button>
+                        <div class="md:col-span-2 pt-4">
+                            <button type="submit" id="submitOrderBtn" class="w-full py-5 bg-green-600 text-white rounded-2xl font-black text-lg shadow-xl uppercase">Submit Order Details</button>
+                            <button type="button" onclick="closeModal('checkoutModal')" class="w-full py-3 text-red-500 font-bold text-xs uppercase mt-2">Cancel Order</button>
                         </div>
                     </form>
                 </div>
 
-                <div class="bg-[#003652] p-8 rounded-[3rem] text-white shadow-2xl h-max sticky top-4">
-                    <h3 class="font-black text-2xl mb-8 border-b border-white/10 pb-4 tracking-tighter">ORDER SUMMARY</h3>
-                    <div id="checkout-items" class="space-y-6 mb-8 max-h-[300px] overflow-y-auto pr-2 no-scrollbar"></div>
-                    
-                    <div class="space-y-4 text-lg font-bold border-t border-white/10 pt-6">
-                        <div class="flex justify-between text-slate-300 uppercase text-xs"><span>Subtotal</span> <span id="check-subtotal">₦0</span></div>
-                        <div class="flex justify-between text-teal-400 uppercase text-xs"><span>Shipment Fee</span> <span id="check-ship">₦0</span></div>
-                        <div class="flex justify-between text-3xl font-black pt-4 border-t border-white/10 text-white leading-none"><span>TOTAL</span> <span id="check-total">₦0</span></div>
+                <div class="bg-slate-50 p-8 rounded-3xl border h-max">
+                    <h3 class="font-black text-lg mb-6 border-b pb-4 uppercase tracking-widest text-[#003652]">Summary</h3>
+                    <div id="checkout-items" class="space-y-4 mb-6"></div>
+                    <div class="space-y-3 text-sm font-bold border-t pt-4">
+                        <div class="flex justify-between text-slate-400 uppercase"><span>Subtotal</span> <span id="check-subtotal">₦0</span></div>
+                        <div class="flex justify-between text-teal-600 uppercase"><span>Shipping</span> <span id="check-ship">₦0</span></div>
+                        <div class="flex justify-between text-2xl font-black text-[#003652] pt-4 border-t uppercase"><span>Total</span> <span id="check-total">₦0</span></div>
                     </div>
-
-                    <div class="mt-12 space-y-6">
-                        <div class="p-5 bg-white/5 rounded-2xl border border-white/10">
-                            <p class="text-[10px] font-black text-teal-400 uppercase mb-3 tracking-widest">Delivery Timeline</p>
-                            <div class="text-[11px] space-y-2 opacity-90 leading-relaxed font-bold">
-                                <p>• Lagos City: <span class="text-white">24 – 48 Working Hours</span></p>
-                                <p>• SE & SW Nigeria: <span class="text-white">1 – 2 Working Days</span></p>
-                                <p>• SS & Northern Nigeria: <span class="text-white">3 – 5 Working Days</span></p>
-                            </div>
+                    
+                    <div class="mt-8 space-y-4">
+                        <div class="bg-white p-4 rounded-xl border">
+                            <p class="text-[10px] font-black text-teal-600 uppercase mb-2">Estimated Delivery</p>
+                            <p class="text-[11px] font-bold text-slate-500">Lagos: 24-48hrs | SE/SW: 1-2 days | Others: 3-5 days</p>
                         </div>
-                        <div class="p-4 bg-red-600 rounded-2xl text-white font-black text-[10px] text-center uppercase tracking-tighter leading-tight shadow-lg">
-                            ⚠️ NOTICE: If your package is more than 2kg or Bulky, you’ll be called to balance the Waybill Fee.
-                        </div>
+                        <p class="text-[10px] text-red-500 font-black uppercase leading-tight italic">⚠️ Package > 2kg or Bulky will require extra Waybill Fee payment.</p>
                     </div>
                 </div>
             </div>
         </div>
 
         <div id="checkout-success-view" class="hidden text-center py-24 px-6">
-            <span class="material-symbols-outlined text-green-500 text-9xl mb-6">check_circle</span>
-            <h2 class="text-4xl font-black text-[#003652] mb-4 uppercase tracking-tighter">Order Generated!</h2>
-            <p class="text-xs font-bold text-slate-400 mb-10 tracking-widest uppercase">Your Track ID: <span id="final-track-id" class="text-[#003652]"></span></p>
-            <p class="text-slate-600 text-lg mb-12 max-w-md mx-auto leading-relaxed">Email details sent to Amadi Caroline. Now, click below to **confirm on WhatsApp** and finalize shipping.</p>
-            <button onclick="sendWhatsAppConfirmation()" class="px-16 py-6 bg-green-600 text-white rounded-full font-black text-2xl shadow-2xl hover:scale-105 transition">CONFIRM ON WHATSAPP</button>
+            <span class="material-symbols-outlined text-green-500 text-9xl mb-6">task_alt</span>
+            <h2 class="text-4xl font-black text-[#003652] mb-4">captured!</h2>
+            <p class="text-xs font-bold text-slate-400 mb-10 uppercase tracking-widest">ID: <span id="final-track-id"></span></p>
+            <button onclick="sendWhatsAppConfirmation()" class="px-12 py-6 bg-green-600 text-white rounded-full font-black text-xl shadow-2xl hover:scale-105 transition">CONFIRM ON WHATSAPP</button>
         </div>
     </div>
 </div>
@@ -207,63 +203,65 @@
 <!-- CART SIDEBAR -->
 <div id="cart-overlay" onclick="toggleCart()"></div>
 <div id="cart-sidebar">
-    <div class="flex justify-between items-center mb-10 border-b pb-4">
+    <div class="flex justify-between items-center mb-8 border-b pb-4">
         <h2 class="text-2xl font-black text-[#003652] uppercase tracking-tighter">Your Bag</h2>
-        <button onclick="toggleCart()" class="material-symbols-outlined text-slate-300 hover:text-black">close</button>
+        <button onclick="toggleCart()" class="material-symbols-outlined text-slate-300">close</button>
     </div>
-    <div id="cart-items" class="flex-grow overflow-y-auto space-y-6 pr-2"></div>
+    <div id="cart-items" class="flex-grow overflow-y-auto space-y-4"></div>
     <div class="border-t pt-8 mt-6">
-        <div class="flex justify-between text-3xl font-black text-[#003652] mb-10 tracking-tighter uppercase"><span>TOTAL:</span><span id="cart-total">₦0</span></div>
-        <button onclick="openCheckout()" class="w-full py-5 bg-[#003652] text-white rounded-[1.5rem] font-black uppercase tracking-widest shadow-2xl hover:bg-black transition-all">Proceed to Checkout</button>
-        <button onclick="toggleCart()" class="w-full mt-6 py-4 border-2 border-slate-100 text-slate-500 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-slate-50 transition-all">Continue Shopping</button>
+        <div class="flex justify-between text-2xl font-black text-[#003652] mb-8"><span>TOTAL:</span><span id="cart-total">₦0</span></div>
+        <button onclick="openCheckout()" class="w-full py-5 bg-[#003652] text-white rounded-2xl font-black uppercase shadow-xl">Proceed to Checkout</button>
+        <button onclick="toggleCart()" class="w-full mt-4 py-3 border-2 border-slate-100 text-slate-400 rounded-xl font-bold text-[10px] uppercase tracking-widest">Continue Shopping</button>
     </div>
 </div>
 
+<!-- ADMIN MODALS -->
+<div id="passModal" class="modal"><div class="modal-content max-w-sm text-center p-12"><h2 class="text-xl font-black mb-8 uppercase text-[#003652]">Admin Portal</h2><input type="password" id="adminPass" placeholder="Enter PIN" class="w-full p-4 border rounded-2xl mb-6 text-center text-xl font-black outline-none"><button onclick="verifyAdmin()" class="w-full py-4 bg-[#003652] text-white rounded-2xl font-black">Verify Access</button></div></div>
+<div id="adminModal" class="modal"><div class="modal-content !max-w-xl p-8"><h2 id="adminTitle" class="text-2xl font-black mb-8 text-[#003652] uppercase">Product Management</h2>
+<form id="adminForm" class="space-y-4 text-sm font-bold"><input type="hidden" id="editId"><div class="grid grid-cols-2 gap-4"><input type="text" id="pName" placeholder="Name" required class="p-4 border rounded-xl"><input type="number" id="pPrice" placeholder="Price" required class="p-4 border rounded-xl"></div>
+<div class="grid grid-cols-2 gap-4"><div class="p-3 bg-slate-50 rounded-xl border text-[9px] uppercase"><label>Category</label><select id="pCat" class="w-full bg-transparent font-black"><option value="New Arrivals">New Arrivals</option><option value="Kitchen Appliances">Kitchen Appliances</option><option value="Home Essentials">Home Essentials</option><option value="Health & Personal Care">Health & Care</option><option value="Electronics & Gadgets">Electronics</option><option value="Home & Living">Home & Living</option><option value="Beauty and fashion accessories">Beauty & Fashion</option><option value="Back to school items">Back to School</option><option value="kids and baby">Kids & Baby</option><option value="Gift items">Gift items</option></select></div><div class="p-3 bg-slate-50 rounded-xl border text-[9px] uppercase"><label>Stock</label><select id="pStock" class="w-full bg-transparent font-black"><option value="In Stock">In Stock</option><option value="Single Product">Single Product</option></select></div></div>
+<textarea id="pDesc" placeholder="Description..." rows="3" class="w-full p-4 border rounded-xl font-medium"></textarea><div class="grid grid-cols-3 gap-2"><input type="file" id="f1" accept="image/*" class="text-[8px] border p-1 rounded"><input type="file" id="f2" accept="image/*" class="text-[8px] border p-1 rounded"><input type="file" id="f3" accept="image/*" class="text-[8px] border p-1 rounded"><input type="file" id="f4" accept="image/*" class="text-[8px] border p-1 rounded"><input type="file" id="f5" accept="image/*" class="text-[8px] border p-1 rounded"></div>
+<button type="submit" id="upBtn" class="w-full py-5 bg-teal-600 text-white rounded-2xl font-black uppercase">Sync to Store</button></form></div></div>
+
 <!-- Footer -->
-<footer class="bg-[#0b101a] text-white pt-24 pb-12 px-6">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-16 mb-20 text-slate-400">
+<footer class="bg-[#0b101a] text-white pt-20 pb-10 px-6">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 text-slate-400">
         <div class="sm:col-span-2">
-            <h3 class="text-4xl font-black italic text-white mb-10 tracking-tighter">Carolive Store</h3>
-            <div class="space-y-6 text-sm font-bold text-slate-300">
-                <p>📍 2 Igbo-elerin street, opposite Assumption Catholic Church Ojo area, Lagos.</p>
-                <p>📧 amadicaroline94@gmail.com</p>
-                <p>📞 08064268412 | 07036247597</p>
-            </div>
-            <div class="flex gap-6 mt-12">
-                <a href="#" class="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center hover:bg-[#1877F2] transition-all transform hover:scale-110 font-black">FB</a>
-                <a href="#" class="w-12 h-12 bg-white/5 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-all transform hover:scale-110 font-black">TK</a>
+            <h3 class="text-3xl font-black italic text-white mb-8 tracking-tighter">Carolive Store</h3>
+            <p class="text-sm font-bold text-slate-400 mb-6 leading-relaxed">📍 2 Igbo-elerin street, opposite Assumption Catholic Church Ojo area, Lagos.<br>📧 amadicaroline94@gmail.com<br>📞 08064268412 | 07036247597</p>
+            <div class="flex gap-6">
+                <a href="#" class="hover:opacity-80 transition"><svg class="w-8 h-8 fill-white" viewBox="0 0 24 24"><path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z"/></svg></a>
+                <a href="#" class="hover:opacity-80 transition"><svg class="w-8 h-8 fill-white" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.9-.32-1.98-.23-2.8.2-.67.33-1.24.93-1.51 1.63-.28.73-.28 1.54-.08 2.29.29.98 1.05 1.83 1.99 2.22.84.34 1.78.34 2.63-.01 1.05-.39 1.87-1.33 2.15-2.42.06-.27.08-.54.08-.82-.01-5.69-.01-11.37.01-17.06z"/></svg></a>
             </div>
         </div>
         <div>
-            <h4 class="font-bold text-teal-400 mb-10 uppercase text-xs tracking-widest tracking-tighter">Policy Links</h4>
-            <ul class="space-y-4 text-sm font-bold">
-                <li><button onclick="openModal('privacyModal')" class="hover:text-white transition uppercase text-[11px]">Privacy Policy</button></li>
-                <li><button onclick="openModal('termsModal')" class="hover:text-white transition uppercase text-[11px]">Terms of Service</button></li>
-                <li><button onclick="openModal('refundModal')" class="hover:text-white transition uppercase text-[11px]">Returns & Refunds</button></li>
+            <h4 class="font-bold text-teal-400 mb-8 uppercase text-[10px] tracking-widest">Policy Links</h4>
+            <ul class="space-y-4 text-xs font-bold">
+                <li><button onclick="openModal('privacyModal')" class="hover:text-white transition uppercase">Privacy Policy</button></li>
+                <li><button onclick="openModal('termsModal')" class="hover:text-white transition uppercase">Terms of Service</button></li>
+                <li><button onclick="openModal('refundModal')" class="hover:text-white transition uppercase">Returns & Refunds</button></li>
             </ul>
-        </div>
-        <div>
-            <h4 class="font-bold text-teal-400 mb-10 uppercase text-xs tracking-widest tracking-tighter">Logistics</h4>
-            <ul class="space-y-5 text-sm font-black">
-                <li class="flex items-center gap-4 text-slate-500 uppercase text-[11px] tracking-widest italic"><span class="material-symbols-outlined text-teal-500">local_shipping</span> Nationwide Express</li>
-                <li class="flex items-center gap-4 text-slate-500 uppercase text-[11px] tracking-widest italic"><span class="material-symbols-outlined text-teal-500">home</span> Doorstep Delivery</li>
-            </ul>
-            <span onclick="openModal('passModal')" class="mt-12 block cursor-pointer opacity-10 text-[9px] uppercase font-bold tracking-widest">Administrator</span>
+            <span onclick="openModal('passModal')" class="mt-20 block cursor-pointer opacity-5 text-[8px] uppercase font-bold tracking-widest">Administrator</span>
         </div>
     </div>
-    <div class="text-center text-slate-600 text-[10px] border-t border-white/5 pt-10 uppercase font-black tracking-widest">&copy; 2025 Carolive Store Nigeria. Reliable Quality.</div>
+    <div class="text-center text-slate-600 text-[10px] border-t border-white/5 pt-10 uppercase font-black tracking-widest">&copy; 2025 Carolive Store. Built for Quality.</div>
 </footer>
 
-<!-- ADMIN MODALS -->
-<div id="passModal" class="modal"><div class="modal-content max-w-sm text-center p-12"><h2 class="text-xl font-black mb-8 uppercase text-[#003652]">Access Portal</h2><input type="password" id="adminPass" placeholder="PIN" class="w-full p-5 border rounded-2xl mb-6 text-center text-2xl font-black outline-none"><button onclick="verifyAdmin()" class="w-full py-5 bg-[#003652] text-white rounded-2xl font-black uppercase tracking-widest">Verify</button></div></div>
-<div id="adminModal" class="modal"><div class="modal-content p-10"><h2 id="adminTitle" class="text-3xl font-black mb-10 text-[#003652] uppercase tracking-tighter border-b pb-6">Product Management</h2>
-<form id="adminForm" class="space-y-6 font-bold text-sm text-slate-800"><input type="hidden" id="editId"><div class="grid grid-cols-1 md:grid-cols-2 gap-5"><input type="text" id="pName" placeholder="Name *" required class="p-4 border rounded-2xl w-full"><input type="number" id="pPrice" placeholder="Price *" required class="p-4 border rounded-2xl w-full"></div>
-<div class="grid grid-cols-2 gap-5"><div class="p-4 bg-slate-50 rounded-2xl border"><label class="text-[9px] font-black text-slate-400 uppercase mb-1 block">Category</label><select id="pCat" class="w-full bg-transparent font-black"><option value="New Arrivals">New Arrivals</option><option value="Kitchen Appliances">Kitchen Appliances</option><option value="Home Essentials">Home Essentials</option><option value="Health & Personal Care">Health & Care</option><option value="Electronics & Gadgets">Electronics</option><option value="Home & Living">Home & Living</option><option value="Beauty and fashion accessories">Beauty & Fashion</option><option value="Back to school items">Back to School</option><option value="kids and baby">Kids & Baby</option><option value="Gift items">Gift items</option></select></div><div class="p-4 bg-slate-50 rounded-2xl border"><label class="text-[9px] font-black text-slate-400 uppercase mb-1 block">Stock</label><select id="pStock" class="w-full bg-transparent font-black"><option value="In Stock">In Stock</option><option value="Single Product">Single Product</option></select></div></div><textarea id="pDesc" placeholder="Description..." rows="4" class="w-full p-5 border rounded-2xl"></textarea><div class="grid grid-cols-2 md:grid-cols-3 gap-3"><input type="file" id="f1" accept="image/*" class="text-[9px] border p-2 bg-white rounded-xl shadow-sm"><input type="file" id="f2" accept="image/*" class="text-[9px] border p-2 bg-white rounded-xl shadow-sm"><input type="file" id="f3" accept="image/*" class="text-[9px] border p-2 bg-white rounded-xl shadow-sm"><input type="file" id="f4" accept="image/*" class="text-[9px] border p-2 bg-white rounded-xl shadow-sm"><input type="file" id="f5" accept="image/*" class="text-[9px] border p-2 bg-white rounded-xl shadow-sm"></div><button type="submit" id="upBtn" class="w-full py-6 bg-teal-600 text-white rounded-[2rem] font-black uppercase tracking-widest mt-8">Sync to Store</button></form></div></div>
+<!-- Policy Modals with Detailed Explanations -->
+<div id="privacyModal" class="modal" onclick="closeModal('privacyModal')"><div class="modal-content !max-w-2xl p-10" onclick="event.stopPropagation()">
+<h2 class="text-2xl font-black mb-8 text-[#003652] uppercase">Privacy Policy</h2>
+<div class="space-y-6 text-slate-700 font-medium leading-relaxed">
+<p>At Carolive Store, we value your privacy. We collect personal information like name, phone number, and delivery address solely for processing your orders within Nigeria. We don't share data with 3rd parties marketing firms. Your information is stored securely.</p></div><button onclick="closeModal('privacyModal')" class="mt-10 bg-[#003652] text-white px-8 py-3 rounded-xl font-bold uppercase text-[10px]">Close</button></div></div>
 
-<!-- POLICY MODALS -->
-<div id="privacyModal" class="modal" onclick="closeModal('privacyModal')"><div class="modal-content !max-w-2xl" onclick="event.stopPropagation()"><h2 class="text-2xl font-black mb-8 text-[#003652] uppercase">Privacy Policy</h2><p class="font-medium text-slate-600 leading-relaxed">At Carolive Store, we collect personal information like your name, phone number, and delivery address solely for processing your orders within Nigeria. We do not share data with 3rd parties.</p><button onclick="closeModal('privacyModal')" class="mt-8 bg-[#003652] text-white px-8 py-3 rounded-xl font-bold text-[10px] uppercase">Close</button></div></div>
-<div id="termsModal" class="modal" onclick="closeModal('termsModal')"><div class="modal-content !max-w-2xl" onclick="event.stopPropagation()"><h2 class="text-2xl font-black mb-8 text-[#003652] uppercase">Terms of Service</h2><p class="font-medium text-slate-600 leading-relaxed">By purchasing from Carolive Store, you agree to our commercial terms. We specialized in high-quality home essentials. Orders are confirmed only after payment is verified via our official UBA account.</p><button onclick="closeModal('termsModal')" class="mt-8 bg-[#003652] text-white px-8 py-3 rounded-xl font-bold text-[10px] uppercase">Close</button></div></div>
-<div id="refundModal" class="modal" onclick="closeModal('refundModal')"><div class="modal-content !max-w-2xl" onclick="event.stopPropagation()"><h2 class="text-2xl font-black mb-8 text-[#003652] uppercase">Returns & Refunds</h2><p class="font-medium text-slate-600 leading-relaxed">We provide a 48-hour return window for items that arrive damaged or incorrect. Items must be in original premium packaging, unused, and unwashed. Contact WhatsApp +234 703 624 7597.</p><button onclick="closeModal('refundModal')" class="mt-8 bg-[#003652] text-white px-8 py-3 rounded-xl font-bold text-[10px] uppercase">Close</button></div></div>
+<div id="termsModal" class="modal" onclick="closeModal('termsModal')"><div class="modal-content !max-w-2xl p-10" onclick="event.stopPropagation()">
+<h2 class="text-2xl font-black mb-8 text-[#003652] uppercase">Terms of Service</h2>
+<div class="space-y-6 text-slate-700 font-medium leading-relaxed">
+<p>By purchasing from Carolive Store, you agree to our commercial terms. Orders are confirmed only after payment is verified via our official Opay account. Prices are in Naira (₦). Nationwide delivery is arranged immediately upon payment confirmation.</p></div><button onclick="closeModal('termsModal')" class="mt-10 bg-[#003652] text-white px-8 py-3 rounded-xl font-bold uppercase text-[10px]">Close</button></div></div>
+
+<div id="refundModal" class="modal" onclick="closeModal('refundModal')"><div class="modal-content !max-w-2xl p-10" onclick="event.stopPropagation()">
+<h2 class="text-2xl font-black mb-8 text-[#003652] uppercase">Returns & Refunds</h2>
+<div class="space-y-6 text-slate-700 font-medium leading-relaxed">
+<p>We have a 48-hour return window for items that arrive damaged or incorrect. Items must be unused and in original premium packaging. To initiate a return, contact WhatsApp (+234 703 624 7597) with clear photos.</p></div><button onclick="closeModal('refundModal')" class="mt-10 bg-[#003652] text-white px-8 py-3 rounded-xl font-bold uppercase text-[10px]">Close</button></div></div>
 
 <script>
     const supabaseUrl = 'https://bfeicdnalzokkutpkwki.supabase.co';
@@ -272,14 +270,43 @@
 
     let allProducts = [], filteredProducts = [], cart = [], curPage = 1, isEditing = false, tempQty = 1, shipFee = 0, currentTrackID = "", payMethod = "Transfer";
 
-    // CORE SYSTEMS
+    // Nav
+    function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('hidden'); }
+    function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('active'); document.getElementById('cart-overlay').classList.toggle('active'); }
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); isEditing = false; }
+    function aiTalk(q) { window.open(`https://wa.me/2347036247597?text=Hello Caroline, ${q}`, '_blank'); }
+    function toggleChat() { document.getElementById('ai-chatroom').classList.toggle('hidden'); }
+
+    // Admin Access
+    function verifyAdmin() {
+        const pass = document.getElementById('adminPass').value;
+        if(pass === '+2347036247597') { document.body.classList.add('can-upload'); closeModal('passModal'); alert("Upload Mode On"); }
+        else if(pass === '07036247597') { document.body.classList.add('can-edit'); closeModal('passModal'); renderGrid(); alert("Edit Mode On"); }
+        else alert("Wrong password");
+    }
+
+    // Load Products
     async function loadProducts() {
         const { data } = await _supabase.from('products').select('*').order('created_at', { ascending: false });
         if (data) { allProducts = data; renderNewArrivals(); filterCat('All'); }
     }
 
+    function renderNewArrivals() {
+        const arr = allProducts.filter(p => p.category === 'New Arrivals').slice(0, 10);
+        if(arr.length > 0) {
+            document.getElementById('new-arrivals-banner').classList.remove('hidden');
+            document.getElementById('new-arrivals-grid').innerHTML = arr.map(p => `
+                <div class="bg-white p-3 rounded-2xl min-w-[220px] md:min-w-[280px] border shadow-sm cursor-pointer" onclick="viewProduct('${p.id}')">
+                    <img src="${p.image1}" class="h-32 md:h-44 w-full object-cover rounded-xl mb-3">
+                    <p class="font-black text-[10px] uppercase line-clamp-1">${p.name}</p>
+                    <p class="text-teal-600 font-black text-xs">₦${Number(p.price).toLocaleString()}</p>
+                </div>`).join('');
+        }
+    }
+
     function filterCat(cat) {
-        document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.innerText.includes(cat)));
+        document.querySelectorAll('.cat-pill').forEach(b => b.classList.toggle('active', b.innerText.includes(cat)));
         document.getElementById('current-cat-title').innerText = cat === 'All' ? 'Our Collection' : cat;
         filteredProducts = (cat === 'All') ? allProducts : allProducts.filter(p => p.category === cat);
         curPage = 1; renderGrid();
@@ -289,16 +316,16 @@
         const start = (curPage - 1) * 10;
         const pageItems = filteredProducts.slice(start, start + 10);
         document.getElementById('product-grid').innerHTML = pageItems.map(p => `
-            <div class="product-card border relative shadow-sm" onclick="viewProduct('${p.id}')">
-                <div class="edit-delete-only absolute top-2 right-2 z-20 flex flex-col gap-2">
-                    <button onclick="event.stopPropagation(); startEdit('${p.id}')" class="bg-blue-600 text-white p-2 rounded-xl shadow-lg"><span class="material-symbols-outlined text-xs">edit</span></button>
-                    <button onclick="event.stopPropagation(); deleteProduct('${p.id}')" class="bg-red-600 text-white p-2 rounded-xl shadow-lg"><span class="material-symbols-outlined text-xs">delete</span></button>
+            <div class="product-card border relative" onclick="viewProduct('${p.id}')">
+                <div class="edit-delete-only absolute top-2 right-2 z-20 flex flex-col gap-1">
+                    <button onclick="event.stopPropagation(); startEdit('${p.id}')" class="bg-blue-600 text-white p-1 rounded text-[8px] font-bold">EDIT</button>
+                    <button onclick="event.stopPropagation(); deleteProduct('${p.id}')" class="bg-red-600 text-white p-1 rounded text-[8px] font-bold">DEL</button>
                 </div>
-                <div class="h-44 md:h-64 bg-slate-50 rounded-[1.8rem] overflow-hidden mb-4 relative">
-                    <img src="${p.image1}" class="w-full h-full object-cover">
-                    <span class="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[7px] font-black uppercase text-white shadow-sm ${p.stock_status === 'Single Product' ? 'bg-orange-500' : 'bg-teal-500'}">${p.stock_status || 'In Stock'}</span>
+                <div class="h-44 md:h-64 bg-slate-50 rounded-2xl overflow-hidden mb-3 relative">
+                    <img src="${p.image1}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/300'">
+                    <span class="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[7px] font-bold uppercase text-white shadow-sm ${p.stock_status === 'Single Product' ? 'bg-orange-500' : 'bg-teal-500'}">${p.stock_status || 'In Stock'}</span>
                 </div>
-                <div class="px-1 text-center md:text-left"><h3 class="font-bold text-[11px] md:text-sm line-clamp-1 uppercase text-[#003652] tracking-tighter leading-tight">${p.name}</h3><p class="text-teal-600 font-black text-xs md:text-xl mt-1 tracking-tighter">₦${Number(p.price).toLocaleString()}</p></div>
+                <div class="px-1 text-center md:text-left"><h3 class="font-bold text-[11px] md:text-sm line-clamp-1 uppercase text-[#003652]">${p.name}</h3><p class="text-teal-600 font-black text-xs md:text-sm">₦${Number(p.price).toLocaleString()}</p></div>
             </div>`).join('');
         renderPaging();
     }
@@ -307,7 +334,7 @@
         const total = Math.ceil(filteredProducts.length / 10) || 1;
         const container = document.getElementById('page-numbers'); container.innerHTML = "";
         for(let i=1; i<=total; i++) {
-            const b = document.createElement('button'); b.innerText = i; b.className = `w-12 h-12 rounded-full font-black text-xs transition ${curPage === i ? 'bg-[#003652] text-white shadow-xl scale-110' : 'text-slate-400 hover:bg-slate-100'}`;
+            const b = document.createElement('button'); b.innerText = i; b.className = `w-10 h-10 rounded-full font-black text-[10px] transition ${curPage === i ? 'bg-[#003652] text-white shadow-xl scale-110' : 'text-slate-400 hover:bg-slate-100'}`;
             b.onclick = () => { curPage = i; renderGrid(); window.scrollTo({top: 400, behavior: 'smooth'}); };
             container.appendChild(b);
         }
@@ -323,52 +350,45 @@
         const images = [p.image1, p.image2, p.image3, p.image4, p.image5].filter(i => i);
         const isSingle = p.stock_status === 'Single Product';
         tempQty = 1;
+
         document.getElementById('modal-body').innerHTML = `
-            <div><div class="aspect-square bg-slate-50 rounded-3xl overflow-hidden flex items-center justify-center shadow-inner"><img src="${p.image1}" id="bigView" class="w-full h-full object-cover"></div>
-            <div class="flex gap-2 mt-4 overflow-x-auto no-scrollbar">${images.map(img => `<img src="${img}" onclick="document.getElementById('bigView').src='${img}'" class="w-20 h-20 md:w-24 md:h-24 object-cover rounded-2xl border-2 border-slate-100 cursor-pointer hover:border-[#003652] transition">`).join('')}</div></div>
-            <div class="flex flex-col"><div class="mb-4"><span class="px-5 py-2 rounded-full text-[10px] font-black uppercase text-white shadow-sm ${isSingle ? 'bg-orange-500' : 'bg-teal-500'}">${p.stock_status || 'In Stock'}</span></div>
-            <h2 class="text-2xl md:text-5xl font-black text-[#003652] mb-2 uppercase tracking-tighter">${p.name}</h2><p class="text-2xl font-black text-teal-600 mb-6 font-black tracking-tight">₦${Number(p.price).toLocaleString()}</p>
-            <div class="mb-6 ${isSingle ? 'hidden' : 'block'}"><p class="text-[10px] font-black text-slate-400 uppercase mb-4 tracking-widest text-center">Quantity to Add</p><div class="flex items-center justify-center gap-12">
-            <button onclick="changeQty(-1)" class="w-14 h-14 border-2 rounded-full font-black text-3xl shadow-sm">-</button><span id="qtyVal" class="font-black text-4xl text-[#003652]">1</span><button onclick="changeQty(1)" class="w-14 h-14 border-2 rounded-full font-black text-3xl shadow-sm">+</button></div></div>
+            <div><div class="aspect-square bg-slate-50 rounded-3xl overflow-hidden flex items-center justify-center shadow-inner border"><img src="${p.image1}" id="bigView" class="w-full h-full object-cover"></div>
+            <div class="flex gap-2 mt-4 overflow-x-auto no-scrollbar">${images.map(img => `<img src="${img}" onclick="document.getElementById('bigView').src='${img}'" class="w-16 h-16 object-cover rounded-xl border-2 border-slate-100 cursor-pointer hover:border-[#003652] transition">`).join('')}</div></div>
+            <div class="flex flex-col"><div class="mb-4"><span class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase text-white shadow-sm ${isSingle ? 'bg-orange-500' : 'bg-teal-500'}">${p.stock_status || 'In Stock'}</span></div>
+            <h2 class="text-2xl md:text-4xl font-black text-[#003652] mb-2 leading-tight uppercase tracking-tighter">${p.name}</h2><p class="text-xl font-bold text-teal-600 mb-6 font-black">₦${Number(p.price).toLocaleString()}</p>
+            <div class="mb-6 ${isSingle ? 'hidden' : 'block'}"><p class="text-[9px] font-black text-slate-400 uppercase mb-3 text-center">Select Quantity</p><div class="flex items-center justify-center gap-10"><button onclick="changeQty(-1)" class="w-12 h-12 bg-white border-2 rounded-full font-black text-2xl shadow-sm">-</button><span id="qtyVal" class="font-black text-2xl">1</span><button onclick="changeQty(1)" class="w-12 h-12 bg-white border-2 rounded-full font-black text-2xl shadow-sm">+</button></div></div>
             <div class="overflow-y-auto max-h-[180px] mb-8 text-slate-700 text-sm whitespace-pre-wrap font-medium">${p.description || ''}</div>
-            <button onclick="commitAdd('${p.id}')" class="w-full py-6 bg-[#003652] text-white rounded-[2rem] font-black shadow-xl uppercase mt-auto tracking-widest transition transform hover:bg-black active:scale-95">Add to Bag</button></div>`;
+            <button onclick="commitAdd('${p.id}')" class="w-full py-5 bg-[#003652] text-white rounded-2xl font-black shadow-xl uppercase mt-auto tracking-widest">Add to Bag</button></div>`;
         openModal('productModal');
     }
 
     function changeQty(n) { tempQty = Math.max(1, tempQty + n); document.getElementById('qtyVal').innerText = tempQty; }
     function commitAdd(id) {
         const p = allProducts.find(x => x.id === id);
-        for(let i=0; i < tempQty; i++) { cart.push(p); }
+        const count = p.stock_status === 'Single Product' ? 1 : tempQty;
+        for(let i=0; i < count; i++) { cart.push(p); }
         updateCartUI(); toggleCart(); closeModal('productModal');
     }
 
-    // CART SYSTEM FIX
     function updateCartUI() {
         document.getElementById('cart-count').innerText = cart.length;
         const grouped = {};
         cart.forEach(item => { if(grouped[item.id]) grouped[item.id].qty += 1; else grouped[item.id] = { ...item, qty: 1 }; });
-        
         document.getElementById('cart-items').innerHTML = Object.values(grouped).map(item => `
             <div class="flex gap-4 items-center bg-slate-50 p-4 rounded-3xl border border-slate-100">
                 <img src="${item.image1}" class="w-16 h-16 object-cover rounded-2xl shadow-sm">
-                <div class="flex-grow">
-                    <p class="font-black text-[10px] text-[#003652] uppercase leading-tight">${item.name}</p>
-                    <p class="text-teal-600 font-black text-xs mt-1">₦${(item.price * item.qty).toLocaleString()} <span class="text-slate-400 font-black ml-1 italic">x${item.qty}</span></p>
-                </div>
+                <div class="flex-grow"><p class="font-black text-[10px] text-[#003652] uppercase leading-tight">${item.name}</p><p class="text-teal-600 font-black text-xs mt-1">₦${(item.price * item.qty).toLocaleString()} <span class="text-slate-400 font-bold ml-1 italic">x${item.qty}</span></p></div>
                 <button onclick="removeAllOfItem('${item.id}')" class="material-symbols-outlined text-red-400 hover:text-red-600 transition p-2 bg-white rounded-full shadow-sm">delete</button>
             </div>`).join('');
-
-        const total = cart.reduce((s, i) => s + Number(i.price), 0);
-        document.getElementById('cart-total').innerText = `₦${total.toLocaleString()}`;
+        document.getElementById('cart-total').innerText = `₦${cart.reduce((s, i) => s + Number(i.price), 0).toLocaleString()}`;
     }
 
     function removeAllOfItem(id) { cart = cart.filter(item => item.id !== id); updateCartUI(); }
 
-    // CHECKOUT SYSTEM
     function setPayMethod(m) {
         payMethod = m;
-        document.getElementById('btnTransfer').className = m==='Transfer' ? "w-1/2 py-5 rounded-xl font-black text-[11px] uppercase bg-[#003652] text-white shadow-xl transform scale-105" : "w-1/2 py-5 rounded-xl font-black text-[11px] uppercase text-slate-400";
-        document.getElementById('btnPOD').className = m==='POD' ? "w-1/2 py-5 rounded-xl font-black text-[11px] uppercase bg-[#003652] text-white shadow-xl transform scale-105" : "w-1/2 py-5 rounded-xl font-black text-[11px] uppercase text-slate-400";
+        document.getElementById('btnTransfer').className = m==='Transfer' ? "w-1/2 py-4 rounded-xl font-black text-[10px] uppercase shadow-lg bg-[#003652] text-white" : "w-1/2 py-4 rounded-xl font-black text-[10px] uppercase text-slate-400";
+        document.getElementById('btnPOD').className = m==='POD' ? "w-1/2 py-4 rounded-xl font-black text-[10px] uppercase shadow-lg bg-[#003652] text-white" : "w-1/2 py-4 rounded-xl font-black text-[10px] uppercase text-slate-400";
         document.getElementById('bank-box').classList.toggle('hidden', m==='POD');
         document.getElementById('receipt-upload-box').classList.toggle('hidden', m==='POD');
         calculateShipping();
@@ -376,25 +396,22 @@
 
     function calculateShipping() {
         shipFee = payMethod === 'POD' ? 15000 : (Number(document.getElementById('shipState').value) || 0);
-        const total = cart.reduce((s, i) => s + Number(i.price), 0);
-        document.getElementById('check-subtotal').innerText = `₦${total.toLocaleString()}`;
+        const sub = cart.reduce((s, i) => s + Number(i.price), 0);
+        document.getElementById('check-subtotal').innerText = `₦${sub.toLocaleString()}`;
         document.getElementById('check-ship').innerText = `₦${shipFee.toLocaleString()}`;
-        document.getElementById('check-total').innerText = `₦${(total + shipFee).toLocaleString()}`;
+        document.getElementById('check-total').innerText = `₦${(sub + shipFee).toLocaleString()}`;
     }
 
     function openCheckout() {
         if(cart.length === 0) return alert("Empty Bag");
         const grouped = {}; cart.forEach(item => { if(grouped[item.id]) grouped[item.id].qty += 1; else grouped[item.id] = { ...item, qty: 1 }; });
-        document.getElementById('checkout-items').innerHTML = Object.values(grouped).map(i => `
-            <div class="flex justify-between text-[11px] py-3 border-b border-[#003652]/5 font-black uppercase text-slate-500">
-                <span class="max-w-[75%] line-clamp-1">${i.name} × ${i.qty}</span><span class="text-[#003652]">₦${(i.price * i.qty).toLocaleString()}</span>
-            </div>`).join('');
+        document.getElementById('checkout-items').innerHTML = Object.values(grouped).map(i => `<div class="flex justify-between text-[11px] py-4 border-b border-slate-100 font-bold text-slate-500 uppercase"><span>${i.name} × ${i.qty}</span><span class="text-[#003652]">₦${(i.price * i.qty).toLocaleString()}</span></div>`).join('');
         calculateShipping(); setPayMethod('Transfer'); toggleCart(); openModal('checkoutModal');
     }
 
     document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const btn = document.getElementById('submitOrderBtn'); btn.innerText = "PREPARING..."; btn.disabled = true;
+        const btn = document.getElementById('submitOrderBtn'); btn.innerText = "PROCESSING..."; btn.disabled = true;
         currentTrackID = "CRV-" + Math.random().toString(36).substr(2, 6).toUpperCase();
         
         let receiptUrl = "PAYMENT ON DELIVERY";
@@ -409,49 +426,38 @@
 
         const grouped = {}; cart.forEach(item => { if(grouped[item.id]) grouped[item.id].qty += 1; else grouped[item.id] = { ...item, qty: 1 }; });
         const listText = Object.values(grouped).map(i => `• ${i.name} (x${i.qty}) - ₦${(i.price * i.qty).toLocaleString()}`).join('%0A');
-        const body = `*ORDER: ${currentTrackID}*%0APAYMENT: ${payMethod}%0AName: ${document.getElementById('fName').value} ${document.getElementById('lName').value}%0AAddress: ${document.getElementById('street').value}%0A%0AITEMS:%0A${listText}%0A%0ATOTAL: ${document.getElementById('check-total').innerText}%0ARECEIPT: ${receiptUrl}`;
-        
-        window.location.href = `mailto:amadicaroline94@gmail.com?subject=New Order ${currentTrackID}&body=${body}`;
+        const body = `ORDER: ${currentTrackID}%0APAYMENT: ${payMethod}%0AName: ${document.getElementById('fName').value} ${document.getElementById('lName').value}%0AAddress: ${document.getElementById('street').value}%0A%0AITEMS:%0A${listText}%0A%0ATOTAL: ${document.getElementById('check-total').innerText}%0ARECEIPT: ${receiptUrl}`;
+        window.location.href = `mailto:amadicaroline94@gmail.com?subject=Order ${currentTrackID}&body=${body}`;
         document.getElementById('final-track-id').innerText = currentTrackID;
         document.getElementById('checkout-main-view').classList.add('hidden');
         document.getElementById('checkout-success-view').classList.remove('hidden');
     });
 
     function sendWhatsAppConfirmation() {
-        window.open(`https://wa.me/2347036247597?text=Hello Caroline, payment sent for Order *${currentTrackID}*. Total: *${document.getElementById('check-total').innerText}*.`, '_blank');
+        window.open(`https://wa.me/2347036247597?text=Hello Amadi Caroline, I just emailed payment for Order *${currentTrackID}*. Total: *${document.getElementById('check-total').innerText}*. Please confirm delivery.`, '_blank');
         location.reload();
     }
 
-    // UTILITIES
-    function toggleMenu() { document.getElementById('mobileMenu').classList.toggle('hidden'); }
-    function toggleCart() { document.getElementById('cart-sidebar').classList.toggle('active'); document.getElementById('cart-overlay').classList.toggle('active'); }
-    function toggleChat() { document.getElementById('ai-chatroom').classList.toggle('hidden'); }
-    function aiTalk(q) { window.open(`https://wa.me/2347036247597?text=Hello Caroline, ${q}`, '_blank'); }
-    function openModal(id) { document.getElementById(id).classList.add('active'); }
-    function closeModal(id) { document.getElementById(id).classList.remove('active'); isEditing = false; }
-    function verifyAdmin() {
-        const pin = document.getElementById('adminPass').value;
-        if(pin === '+2347036247597') { document.body.classList.add('can-upload'); closeModal('passModal'); }
-        else if(pin === '07036247597') { document.body.classList.add('can-edit'); closeModal('passModal'); renderGrid(); }
-        else alert("Deny Access");
+    async function deleteProduct(id) { if(confirm("Confirm Removal?")) { await _supabase.from('products').delete().eq('id', id); location.reload(); } }
+    function startEdit(id) {
+        const p = allProducts.find(x => x.id === id); isEditing = true;
+        document.getElementById('adminTitle').innerText = "Edit Store Item"; document.getElementById('editId').value = p.id;
+        document.getElementById('pName').value = p.name; document.getElementById('pPrice').value = p.price; 
+        document.getElementById('pDesc').value = p.description; document.getElementById('pStock').value = p.stock_status;
+        document.getElementById('pCat').value = p.category; openModal('adminModal');
     }
 
-    // STORAGE FIX Logic
     document.getElementById('adminForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const upBtn = document.getElementById('upBtn'); upBtn.innerText = "SAVING..."; upBtn.disabled = true;
         const id = document.getElementById('editId').value;
         const urls = [];
         for(let i=1; i<=5; i++){
-            const fileInput = document.getElementById(`f${i}`);
-            const file = fileInput.files[0];
+            const file = document.getElementById(`f${i}`).files[0];
             if(file){
                 const path = `uploads/${Date.now()}_${file.name}`;
                 const { data } = await _supabase.storage.from('product-images').upload(path, file);
-                if(data) {
-                    const { data: urlData } = _supabase.storage.from('product-images').getPublicUrl(path);
-                    urls.push(urlData.publicUrl);
-                }
+                if(data) urls.push(_supabase.storage.from('product-images').getPublicUrl(path).data.publicUrl);
             } else if(isEditing) { urls.push(allProducts.find(x => x.id === id)[`image${i}`]); }
         }
         const payload = {
@@ -462,27 +468,6 @@
         const res = isEditing ? await _supabase.from('products').update(payload).eq('id', id) : await _supabase.from('products').insert([payload]);
         if(!res.error) location.reload(); else { alert(res.error.message); upBtn.disabled = false; }
     });
-
-    async function renderNewArrivals() {
-        const arr = allProducts.filter(p => p.category === 'New Arrivals').slice(0, 10);
-        if(arr.length > 0) {
-            document.getElementById('new-arrivals-banner').classList.remove('hidden');
-            document.getElementById('new-arrivals-grid').innerHTML = arr.map(p => `
-                <div class="bg-white p-3 rounded-[2rem] min-w-[220px] md:min-w-[280px] border-2 border-teal-100 shadow-sm cursor-pointer" onclick="viewProduct('${p.id}')">
-                    <img src="${p.image1}" class="h-32 md:h-44 w-full object-cover rounded-[1.5rem] mb-3">
-                    <p class="font-black text-[10px] md:text-xs uppercase text-[#003652] line-clamp-1">${p.name}</p>
-                    <p class="text-teal-600 font-black text-xs md:text-lg">₦${Number(p.price).toLocaleString()}</p>
-                </div>`).join('');
-        }
-    }
-
-    async function deleteProduct(id) { if(confirm("Confirm Delete?")) { await _supabase.from('products').delete().eq('id', id); location.reload(); } }
-    function startEdit(id) {
-        const p = allProducts.find(x => x.id === id); isEditing = true;
-        document.getElementById('adminTitle').innerText = "Update Store Item"; document.getElementById('editId').value = p.id;
-        document.getElementById('pName').value = p.name; document.getElementById('pPrice').value = p.price; 
-        document.getElementById('pDesc').value = p.description; document.getElementById('pStock').value = p.stock_status; document.getElementById('pCat').value = p.category; openModal('adminModal');
-    }
 
     window.onload = loadProducts;
 </script>
