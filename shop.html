@@ -99,7 +99,7 @@
 </div>
 
 <main>
-    <!-- SEARCH BAR SECTION - NEW! -->
+    <!-- SEARCH BAR SECTION -->
     <div class="bg-white border-b py-4 px-4 sticky top-16 z-[7000]">
         <div class="max-w-3xl mx-auto relative">
             <input type="text" id="search-input" oninput="handleSearch()" placeholder="Search products, appliances, bedding..." 
@@ -181,9 +181,8 @@
             <h2 class="text-3xl font-black text-[#003652] border-b pb-6 uppercase tracking-tighter mb-10">Billing & Checkout</h2>
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 text-slate-900">
                 <div class="space-y-8 lg:col-span-7">
-                    <div class="flex gap-3 p-2 bg-slate-50 rounded-[1.5rem] border">
-                        <button onclick="setPayMethod('Transfer')" id="btnTransfer" class="w-1/2 py-4 rounded-xl font-black text-[11px] uppercase transition-all shadow-xl bg-[#003652] text-white">Transfer</button>
-                        <button onclick="setPayMethod('POD')" id="btnPOD" class="w-1/2 py-4 rounded-xl font-black text-[11px] uppercase transition-all text-slate-400">Cash on Delivery</button>
+                    <div class="p-4 bg-blue-50 border-2 border-blue-200 text-blue-800 rounded-2xl font-black text-[12px] uppercase text-center shadow-inner tracking-widest">
+                        Payment Method: Bank Transfer
                     </div>
 
                     <div id="bank-box" class="bg-blue-600 text-white p-8 rounded-[2.5rem] shadow-2xl border-2 border-white/10">
@@ -199,8 +198,8 @@
                         
                         <div class="md:col-span-2">
                             <label class="text-[9px] font-black text-slate-400 uppercase mb-2 block tracking-widest">Select Location for Delivery Fee *</label>
-                            <select id="shipState" onchange="calculateShipping()" class="w-full p-4 border-2 border-slate-50 rounded-2xl bg-white font-black text-sm" required>
-                                <option value="">Select Location</option>
+                            <select id="shipState" onchange="calculateShipping()" class="w-full p-4 border-2 border-slate-50 rounded-2xl bg-white font-black text-sm outline-none focus:border-[#003652] transition" required>
+                                <option value="">-- Select Location --</option>
                                 <optgroup label="LAGOS City (₦2,000)">
                                     <option value="2000">Alaba int’l / Volks / Ilufe Ajangbadi / Shibiri Ilogbo</option>
                                 </optgroup>
@@ -225,11 +224,11 @@
                         
                         <div id="receipt-upload-box" class="md:col-span-2 p-6 bg-slate-50 rounded-[2rem] border-2 border-dashed border-slate-200 text-center">
                             <p class="text-[10px] font-black uppercase text-slate-500 mb-3">Upload Bank Receipt *</p>
-                            <input type="file" id="receiptFile" accept="image/*" class="text-xs mx-auto block">
+                            <input type="file" id="receiptFile" accept="image/*" class="text-xs mx-auto block" required>
                         </div>
 
                         <div class="md:col-span-2 pt-6">
-                            <button type="submit" id="submitOrderBtn" class="w-full py-6 bg-[#003652] text-white rounded-[2rem] font-black text-xl shadow-2xl hover:bg-black transition uppercase">Send Details to Store</button>
+                            <button type="submit" id="submitOrderBtn" class="w-full py-6 bg-[#003652] text-white rounded-[2rem] font-black text-xl shadow-2xl hover:bg-black transition uppercase">Submit Order</button>
                             <button type="button" onclick="closeModal('checkoutModal')" class="w-full py-4 text-red-500 font-bold text-[10px] uppercase mt-2">Cancel Order</button>
                         </div>
                     </form>
@@ -241,7 +240,7 @@
                         <div id="checkout-items" class="space-y-4 mb-8 max-h-[350px] overflow-y-auto no-scrollbar"></div>
                         <div class="space-y-4 pt-6 border-t border-slate-200 font-black">
                             <div class="flex justify-between text-slate-400 text-xs"><span>SUBTOTAL</span> <span id="check-subtotal">₦0</span></div>
-                            <div class="flex justify-between text-teal-600 text-xs"><span>DELIVERY</span> <span id="check-ship">₦0</span></div>
+                            <div class="flex justify-between text-teal-600 text-xs"><span>DELIVERY FEE</span> <span id="check-ship">₦0</span></div>
                             <div class="flex justify-between text-3xl text-[#003652] pt-4 border-t-2 border-[#003652]/5"><span>TOTAL</span> <span id="check-total">₦0</span></div>
                         </div>
                         <div class="mt-12 space-y-5">
@@ -260,15 +259,19 @@
             </div>
         </div>
 
-        <div id="checkout-success-view" class="hidden text-center py-24 px-6 animate-fade-in">
-            <span class="material-symbols-outlined text-green-500 text-9xl mb-8">verified_user</span>
-            <h2 class="text-4xl font-black text-[#003652] mb-3 uppercase">Email Sent!</h2>
-            <div class="bg-slate-100 p-8 rounded-[2rem] inline-block mb-10 border">
-                <p class="text-[10px] font-black text-slate-400 uppercase mb-2">Tracking ID</p>
-                <p id="final-track-id" class="text-3xl font-black text-[#003652] tracking-widest">CRV-A1B2C</p>
+        <!-- NEW SUCCESS VIEW -->
+        <div id="checkout-success-view" class="hidden text-center py-20 px-6">
+            <span class="material-symbols-outlined text-green-500 text-[100px] mb-6 animate-pulse">check_circle</span>
+            <h2 class="text-4xl md:text-5xl font-black text-green-600 mb-4 uppercase tracking-tighter animate-bounce">Sent Successfully!</h2>
+            <p class="text-lg font-bold text-slate-500 mb-10 max-w-lg mx-auto">Thank you for shopping with us! Your order details and payment receipt have been received by our store.</p>
+            
+            <div class="bg-slate-50 p-8 rounded-[2rem] inline-block mb-10 border shadow-inner">
+                <p class="text-[12px] font-black text-slate-400 uppercase mb-2 tracking-widest">Order Number</p>
+                <p id="final-track-id" class="text-4xl font-black text-[#003652] tracking-widest">001156828</p>
             </div>
-            <button onclick="sendWhatsAppConfirmation()" class="px-16 py-7 bg-green-600 text-white rounded-full font-black text-2xl shadow-2xl hover:bg-green-700 transition transform hover:scale-105 flex items-center justify-center gap-4 mx-auto uppercase">
-                Confirm on WhatsApp <span class="material-symbols-outlined">send</span>
+            
+            <button onclick="sendWhatsAppConfirmation()" class="px-10 py-6 md:px-16 md:py-7 bg-[#25D366] text-white rounded-full font-black text-xl md:text-2xl shadow-2xl hover:bg-green-700 transition transform hover:scale-105 flex items-center justify-center gap-4 mx-auto uppercase">
+                Confirm Order <span class="material-symbols-outlined">send</span>
             </button>
         </div>
     </div>
@@ -363,7 +366,7 @@
     const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJmZWljZG5hbHpva2t1dHBrd2tpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2NzY2NDIsImV4cCI6MjA5NDI1MjY0Mn0.lK42cRXm_ulcwiSPah3Tg_z3Uwp4WpcIlu_VSYnWVNE';
     const _supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    let allProducts = [], filteredProducts = [], cart = JSON.parse(localStorage.getItem('carolive_cart')) || [], curPage = 1, isEditing = false, tempQty = 1, shipFee = 0, currentTrackID = "", payMethod = "Transfer";
+    let allProducts = [], filteredProducts = [], cart = JSON.parse(localStorage.getItem('carolive_cart')) || [], curPage = 1, isEditing = false, tempQty = 1, shipFee = 0, currentTrackID = "";
 
     // Initialize Store
     window.onload = () => { loadProducts(); updateCartUI(); };
@@ -513,21 +516,15 @@
         document.getElementById('cart-total').innerText = `₦${cart.reduce((s, i) => s + Number(i.price), 0).toLocaleString()}`;
     }
 
-    function removeAllOfItem(id) { cart = cart.filter(item => item.id !== id); localStorage.setItem('carolive_cart', JSON.stringify(cart)); updateCartUI(); }
-
-    function setPayMethod(m) {
-        payMethod = m;
-        document.getElementById('btnTransfer').className = m==='Transfer' ? "w-1/2 py-5 rounded-xl font-black text-[11px] uppercase bg-[#003652] text-white shadow-xl scale-105" : "w-1/2 py-5 rounded-xl font-black text-[11px] uppercase text-slate-400";
-        document.getElementById('btnPOD').className = m==='POD' ? "w-1/2 py-5 rounded-xl font-black text-[11px] uppercase bg-[#003652] text-white shadow-xl scale-105" : "w-1/2 py-5 rounded-xl font-black text-[11px] uppercase text-slate-400";
-        document.getElementById('bank-box').classList.toggle('hidden', m==='POD');
-        document.getElementById('receipt-upload-box').classList.toggle('hidden', m==='POD');
-        calculateShipping();
-    }
+    function removeAllOfItem(id) { cart = cart.filter(item => item.id !== id); localStorage.setItem('carolive_cart', JSON.stringify(cart)); updateCartUI(); calculateShipping(); }
 
     function calculateShipping() {
-        shipFee = payMethod === 'POD' ? 15000 : 0;
+        const shipSelect = document.getElementById('shipState');
+        shipFee = Number(shipSelect.value) || 0;
+        
         const sub = cart.reduce((s, i) => s + Number(i.price), 0);
         document.getElementById('check-subtotal').innerText = `₦${sub.toLocaleString()}`;
+        document.getElementById('check-ship').innerText = `₦${shipFee.toLocaleString()}`;
         document.getElementById('check-total').innerText = `₦${(sub + shipFee).toLocaleString()}`;
     }
 
@@ -535,41 +532,95 @@
         if(cart.length === 0) return alert("Bag is empty");
         const grouped = {}; cart.forEach(item => { if(grouped[item.id]) grouped[item.id].qty += 1; else grouped[item.id] = { ...item, qty: 1 }; });
         document.getElementById('checkout-items').innerHTML = Object.values(grouped).map(i => `<div class="flex justify-between text-[11px] py-4 border-b border-[#003652]/5 font-black uppercase text-slate-500"><span>${i.name} × ${i.qty}</span><span class="text-[#003652]">₦${(i.price * i.qty).toLocaleString()}</span></div>`).join('');
-        currentTrackID = "CRV-" + Math.random().toString(36).substr(2, 6).toUpperCase();
-        calculateShipping(); setPayMethod('Transfer'); toggleCart(); openModal('checkoutModal');
+        
+        // Pure 9-Digit Number generation
+        currentTrackID = String(Math.floor(Math.random() * 1000000000)).padStart(9, '0');
+        
+        document.getElementById('shipState').value = ""; // Force them to select shipping location
+        calculateShipping(); 
+        
+        toggleCart(); 
+        openModal('checkoutModal');
+        
+        document.getElementById('checkout-main-view').classList.remove('hidden');
+        document.getElementById('checkout-success-view').classList.add('hidden');
     }
 
     document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const btn = document.getElementById('submitOrderBtn'); btn.innerText = "UPLOADING..."; btn.disabled = true;
+        const btn = document.getElementById('submitOrderBtn'); 
+        btn.innerText = "PROCESSING ORDER..."; 
+        btn.disabled = true;
 
-        let receiptUrl = "PAYMENT ON DELIVERY";
-        if(payMethod === 'Transfer') {
-            const file = document.getElementById('receiptFile').files[0];
-            if(file) {
-                const path = `receipts/${currentTrackID}`;
-                const { data } = await _supabase.storage.from('product-images').upload(path, file);
-                if(data) receiptUrl = _supabase.storage.from('product-images').getPublicUrl(path).data.publicUrl;
-            }
+        let receiptUrl = "NO RECEIPT UPLOADED";
+        const file = document.getElementById('receiptFile').files[0];
+        if(file) {
+            const path = `receipts/${currentTrackID}`;
+            const { data } = await _supabase.storage.from('product-images').upload(path, file);
+            if(data) receiptUrl = _supabase.storage.from('product-images').getPublicUrl(path).data.publicUrl;
         }
 
         const grouped = {}; cart.forEach(item => { if(grouped[item.id]) grouped[item.id].qty += 1; else grouped[item.id] = { ...item, qty: 1 }; });
-        const listText = Object.values(grouped).map(i => `• ${i.name} (x${i.qty}) - Price: ₦${(i.price * i.qty).toLocaleString()}`).join('%0A');
+        const listText = Object.values(grouped).map(i => `• ${i.name} (x${i.qty}) - Price: ₦${(i.price * i.qty).toLocaleString()}`).join('\n');
+        
         const fName = document.getElementById('fName').value;
+        const lName = document.getElementById('lName').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const address = document.getElementById('cAddress').value;
         const totalAmount = document.getElementById('check-total').innerText;
         
-        const body = `*ORDER: ${currentTrackID}*%0APAYMENT: ${payMethod}%0AName: ${fName} ${document.getElementById('lName').value}%0AAddress: ${document.getElementById('cAddress').value}%0A%0AITEMS:%0A${listText}%0A%0ATOTAL: ${totalAmount}%0ARECEIPT: ${receiptUrl}`;
-        window.location.href = `mailto:amadicaroline94@gmail.com?subject=Order ${currentTrackID}&body=${encodeURIComponent(body)}`;
+        const shipSelect = document.getElementById('shipState');
+        const locationText = shipSelect.options[shipSelect.selectedIndex].text;
+        
+        // Setup payload for automated email sending
+        const emailPayload = {
+            _subject: `New Store Order: #${currentTrackID} from ${fName}`,
+            Order_Number: currentTrackID,
+            Customer_Name: `${fName} ${lName}`,
+            WhatsApp_Number: phone,
+            Email_Address: email,
+            Delivery_Address: address,
+            Delivery_Location_Fee: locationText,
+            Items_Ordered: listText,
+            Total_Paid: totalAmount,
+            Receipt_Link: receiptUrl
+        };
+
+        // Send Email Automatically via Background API
+        try {
+            await fetch("https://formsubmit.co/ajax/amadicaroline94@gmail.com", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(emailPayload)
+            });
+        } catch (error) {
+            console.error("Email API Note:", error);
+            // It will still proceed to success screen smoothly even if their adblocker blocks fetch
+        }
         
         document.getElementById('final-track-id').innerText = currentTrackID;
         document.getElementById('checkout-main-view').classList.add('hidden');
         document.getElementById('checkout-success-view').classList.remove('hidden');
+        
+        // Reset submit button just in case modal reopens
+        btn.innerText = "Submit Order"; 
+        btn.disabled = false;
     });
 
     function sendWhatsAppConfirmation() {
         const total = document.getElementById('check-total').innerText;
-        window.open(`https://wa.me/2347036247597?text=Hello Caroline, payment sent for Order *${currentTrackID}*. Total: *${total}*. Please confirm delivery.`, '_blank');
-        localStorage.removeItem('carolive_cart'); location.reload();
+        
+        const msg = `Hello Carolive Store, I just placed an order on the website.%0A%0A*Order Number:* ${currentTrackID}%0A*Total Amount Paid:* ${total}%0A%0APlease confirm my order details and delivery!`;
+        
+        window.open(`https://wa.me/2347036247597?text=${msg}`, '_blank');
+        
+        // Clear cart and reload nicely after they redirect to Whatsapp
+        localStorage.removeItem('carolive_cart'); 
+        location.reload();
     }
 
     // UTILS
