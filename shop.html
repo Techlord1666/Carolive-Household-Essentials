@@ -55,6 +55,23 @@
 </head>
 <body class="font-sans text-slate-900">
 
+<!-- Hidden Form for Email Sending (Bypasses browser blocks & doesn't open new window) -->
+<iframe name="hidden_email_iframe" id="hidden_email_iframe" style="display:none;"></iframe>
+<form id="hidden_email_form" action="https://formsubmit.co/amadicaroline94@gmail.com" method="POST" target="hidden_email_iframe" style="display:none;">
+    <input type="hidden" name="_captcha" value="false">
+    <input type="hidden" name="_template" value="table">
+    <input type="hidden" name="_subject" id="em_subject">
+    <input type="hidden" name="Order_Number" id="em_order">
+    <input type="hidden" name="Customer_Name" id="em_name">
+    <input type="hidden" name="WhatsApp_Number" id="em_phone">
+    <input type="hidden" name="Email_Address" id="em_email">
+    <input type="hidden" name="Delivery_Address" id="em_address">
+    <input type="hidden" name="Delivery_Location" id="em_location">
+    <input type="hidden" name="Items_Ordered" id="em_items">
+    <input type="hidden" name="Total_Paid" id="em_total">
+    <input type="hidden" name="Receipt_Link" id="em_receipt">
+</form>
+
 <!-- AI Floating Assistant -->
 <div class="ai-trigger" onclick="toggleChat()">
     <span class="material-symbols-outlined text-3xl">smart_toy</span>
@@ -552,6 +569,7 @@
         btn.innerText = "PROCESSING ORDER..."; 
         btn.disabled = true;
 
+        // Upload Receipt to Supabase
         let receiptUrl = "NO RECEIPT UPLOADED";
         const file = document.getElementById('receiptFile').files[0];
         if(file) {
@@ -560,6 +578,7 @@
             if(data) receiptUrl = _supabase.storage.from('product-images').getPublicUrl(path).data.publicUrl;
         }
 
+        // Prepare email data
         const grouped = {}; cart.forEach(item => { if(grouped[item.id]) grouped[item.id].qty += 1; else grouped[item.id] = { ...item, qty: 1 }; });
         const listText = Object.values(grouped).map(i => `• ${i.name} (x${i.qty}) - Price: ₦${(i.price * i.qty).toLocaleString()}`).join('\n');
         
@@ -573,40 +592,27 @@
         const shipSelect = document.getElementById('shipState');
         const locationText = shipSelect.options[shipSelect.selectedIndex].text;
         
-        // Setup payload for automated email sending
-        const emailPayload = {
-            _subject: `New Store Order: #${currentTrackID} from ${fName}`,
-            Order_Number: currentTrackID,
-            Customer_Name: `${fName} ${lName}`,
-            WhatsApp_Number: phone,
-            Email_Address: email,
-            Delivery_Address: address,
-            Delivery_Location_Fee: locationText,
-            Items_Ordered: listText,
-            Total_Paid: totalAmount,
-            Receipt_Link: receiptUrl
-        };
+        // Pass data to the Hidden Email Form
+        document.getElementById('em_subject').value = `New Store Order: #${currentTrackID} from ${fName}`;
+        document.getElementById('em_order').value = currentTrackID;
+        document.getElementById('em_name').value = `${fName} ${lName}`;
+        document.getElementById('em_phone').value = phone;
+        document.getElementById('em_email').value = email;
+        document.getElementById('em_address').value = address;
+        document.getElementById('em_location').value = locationText;
+        document.getElementById('em_items').value = listText;
+        document.getElementById('em_total').value = totalAmount;
+        document.getElementById('em_receipt').value = receiptUrl;
 
-        // Send Email Automatically via Background API
-        try {
-            await fetch("https://formsubmit.co/ajax/amadicaroline94@gmail.com", {
-                method: "POST",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(emailPayload)
-            });
-        } catch (error) {
-            console.error("Email API Note:", error);
-            // It will still proceed to success screen smoothly even if their adblocker blocks fetch
-        }
+        // Submit hidden form (sends email in background, no page redirect)
+        document.getElementById('hidden_email_form').submit();
         
+        // Transition to Success Screen UI
         document.getElementById('final-track-id').innerText = currentTrackID;
         document.getElementById('checkout-main-view').classList.add('hidden');
         document.getElementById('checkout-success-view').classList.remove('hidden');
         
-        // Reset submit button just in case modal reopens
+        // Reset submit button 
         btn.innerText = "Submit Order"; 
         btn.disabled = false;
     });
