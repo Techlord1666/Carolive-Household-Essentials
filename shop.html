@@ -55,30 +55,6 @@
 </head>
 <body class="font-sans text-slate-900">
 
-<!-- EMAIL ACTIVATION BANNER - CLICK THIS ONCE -->
-<div id="email-activation-banner" class="bg-red-600 text-white text-center py-3 px-4 font-bold text-xs z-[20000] relative flex flex-wrap justify-center items-center gap-4 shadow-md">
-    <span>⚠️ FIRST TIME ADMIN SETUP: You must activate the background email system for orders.</span>
-    <button onclick="forceEmailActivation()" class="bg-white text-red-600 px-6 py-2 rounded-full font-black uppercase shadow-lg hover:bg-slate-100 transition">Activate Now</button>
-    <button onclick="document.getElementById('email-activation-banner').style.display='none'" class="underline opacity-80 hover:opacity-100">Hide Message</button>
-</div>
-
-<!-- Hidden Form for Email Sending (Bypasses browser blocks & doesn't open new window) -->
-<iframe name="hidden_email_iframe" id="hidden_email_iframe" style="display:none;"></iframe>
-<form id="hidden_email_form" action="https://formsubmit.co/amadicaroline94@gmail.com" method="POST" target="hidden_email_iframe" style="display:none;">
-    <input type="hidden" name="_captcha" value="false">
-    <input type="hidden" name="_template" value="table">
-    <input type="hidden" name="_subject" id="em_subject">
-    <input type="hidden" name="Order_Number" id="em_order">
-    <input type="hidden" name="Customer_Name" id="em_name">
-    <input type="hidden" name="WhatsApp_Number" id="em_phone">
-    <input type="hidden" name="Email_Address" id="em_email">
-    <input type="hidden" name="Delivery_Address" id="em_address">
-    <input type="hidden" name="Delivery_Location" id="em_location">
-    <input type="hidden" name="Items_Ordered" id="em_items">
-    <input type="hidden" name="Total_Paid" id="em_total">
-    <input type="hidden" name="Receipt_Link" id="em_receipt">
-</form>
-
 <!-- AI Floating Assistant -->
 <div class="ai-trigger" onclick="toggleChat()">
     <span class="material-symbols-outlined text-3xl">smart_toy</span>
@@ -287,7 +263,7 @@
         <div id="checkout-success-view" class="hidden text-center py-20 px-6">
             <span class="material-symbols-outlined text-green-500 text-[100px] mb-6 animate-pulse">check_circle</span>
             <h2 class="text-4xl md:text-5xl font-black text-green-600 mb-4 uppercase tracking-tighter animate-bounce">Sent Successfully!</h2>
-            <p class="text-lg font-bold text-slate-500 mb-10 max-w-lg mx-auto">Thank you for shopping with us! Your order details and payment receipt have been received by our store.</p>
+            <p class="text-lg font-bold text-slate-500 mb-10 max-w-lg mx-auto">Thank you for shopping with us! Your order details and payment receipt have been successfully sent to our store.</p>
             
             <div class="bg-slate-50 p-8 rounded-[2rem] inline-block mb-10 border shadow-inner">
                 <p class="text-[12px] font-black text-slate-400 uppercase mb-2 tracking-widest">Order Number</p>
@@ -392,26 +368,6 @@
 
     let allProducts = [], filteredProducts = [], cart = JSON.parse(localStorage.getItem('carolive_cart')) || [], curPage = 1, isEditing = false, tempQty = 1, shipFee = 0, currentTrackID = "";
 
-    // EXPLICIT ACTIVATION HELPER FUNCTION
-    function forceEmailActivation() {
-        alert("A new tab will now open. Please complete the 'I am not a robot' CAPTCHA box to prove you are human.\n\nOnce completed, FormSubmit will finally send the activation link to your email!");
-        
-        const form = document.createElement('form');
-        form.action = "https://formsubmit.co/amadicaroline94@gmail.com";
-        form.method = "POST";
-        form.target = "_blank"; // Forces it to open visibly in a new tab
-        
-        const input = document.createElement('input');
-        input.type = "hidden";
-        input.name = "_subject";
-        input.value = "STORE SYSTEM ACTIVATION";
-        
-        form.appendChild(input);
-        document.body.appendChild(form);
-        form.submit();
-        document.body.removeChild(form);
-    }
-
     // Initialize Store
     window.onload = () => { loadProducts(); updateCartUI(); };
 
@@ -420,8 +376,14 @@
         const query = document.getElementById('search-input').value.toLowerCase().trim();
         document.querySelectorAll('.cat-pill').forEach(b => b.classList.toggle('active', b.innerText.includes('All')));
         document.getElementById('current-cat-title').innerText = query === "" ? "Our Store Collection" : `Results for "${query}"`;
-        if (query === "") { filteredProducts = allProducts; } else {
-            filteredProducts = allProducts.filter(p => p.name.toLowerCase().includes(query) || (p.description && p.description.toLowerCase().includes(query)) || (p.category && p.category.toLowerCase().includes(query)));
+
+        if (query === "") { filteredProducts = allProducts; } 
+        else {
+            filteredProducts = allProducts.filter(p => 
+                p.name.toLowerCase().includes(query) || 
+                (p.description && p.description.toLowerCase().includes(query)) ||
+                (p.category && p.category.toLowerCase().includes(query))
+            );
         }
         curPage = 1; renderGrid();
     }
@@ -429,15 +391,19 @@
     // AUTH LOGIC
     function verifyAdmin() {
         const pin = document.getElementById('adminPass').value;
-        if(pin === '+2347036247597') { document.body.classList.add('can-upload'); alert("Upload Access Enabled"); closeModal('passModal'); } 
-        else if(pin === '07036247597') { document.body.classList.add('can-edit'); alert("Edit/Delete Enabled"); closeModal('passModal'); renderGrid(); } 
-        else alert("Invalid PIN");
+        if(pin === '+2347036247597') {
+            document.body.classList.add('can-upload'); alert("Upload Access Enabled"); closeModal('passModal');
+        } else if(pin === '07036247597') {
+            document.body.classList.add('can-edit'); alert("Edit/Delete Enabled"); closeModal('passModal'); renderGrid();
+        } else alert("Invalid PIN");
     }
 
     // DATA LOADING
     async function loadProducts() {
         const { data } = await _supabase.from('products').select('*').order('created_at', { ascending: false });
-        if (data) { allProducts = data; renderNewArrivals(); filteredProducts = allProducts; renderGrid(); }
+        if (data) { 
+            allProducts = data; renderNewArrivals(); filteredProducts = allProducts; renderGrid();
+        }
     }
 
     function renderNewArrivals() {
@@ -454,7 +420,7 @@
     }
 
     function filterCat(cat) {
-        document.getElementById('search-input').value = ""; // Clear search when picking category
+        document.getElementById('search-input').value = ""; 
         document.querySelectorAll('.cat-pill').forEach(b => b.classList.toggle('active', b.innerText.includes(cat)));
         document.getElementById('current-cat-title').innerText = cat === 'All' ? 'Our Store Collection' : cat;
         filteredProducts = (cat === 'All') ? allProducts : allProducts.filter(p => p.category === cat);
@@ -546,6 +512,7 @@
     function calculateShipping() {
         const shipSelect = document.getElementById('shipState');
         shipFee = Number(shipSelect.value) || 0;
+        
         const sub = cart.reduce((s, i) => s + Number(i.price), 0);
         document.getElementById('check-subtotal').innerText = `₦${sub.toLocaleString()}`;
         document.getElementById('check-ship').innerText = `₦${shipFee.toLocaleString()}`;
@@ -556,17 +523,26 @@
         if(cart.length === 0) return alert("Bag is empty");
         const grouped = {}; cart.forEach(item => { if(grouped[item.id]) grouped[item.id].qty += 1; else grouped[item.id] = { ...item, qty: 1 }; });
         document.getElementById('checkout-items').innerHTML = Object.values(grouped).map(i => `<div class="flex justify-between text-[11px] py-4 border-b border-[#003652]/5 font-black uppercase text-slate-500"><span>${i.name} × ${i.qty}</span><span class="text-[#003652]">₦${(i.price * i.qty).toLocaleString()}</span></div>`).join('');
+        
         currentTrackID = String(Math.floor(Math.random() * 1000000000)).padStart(9, '0');
-        document.getElementById('shipState').value = ""; calculateShipping(); 
+        
+        document.getElementById('shipState').value = ""; // Force them to select shipping location
+        calculateShipping(); 
+        
         toggleCart(); openModal('checkoutModal');
+        
         document.getElementById('checkout-main-view').classList.remove('hidden');
         document.getElementById('checkout-success-view').classList.add('hidden');
     }
 
+    // FINAL CHECKOUT SUBMISSION LOGIC - USING WEB3FORMS KEY
     document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const btn = document.getElementById('submitOrderBtn'); btn.innerText = "PROCESSING ORDER..."; btn.disabled = true;
+        const btn = document.getElementById('submitOrderBtn'); 
+        btn.innerText = "PROCESSING ORDER..."; 
+        btn.disabled = true;
 
+        // 1. Upload Receipt to Supabase
         let receiptUrl = "NO RECEIPT UPLOADED";
         const file = document.getElementById('receiptFile').files[0];
         if(file) {
@@ -575,39 +551,72 @@
             if(data) receiptUrl = _supabase.storage.from('product-images').getPublicUrl(path).data.publicUrl;
         }
 
+        // 2. Prepare Order Details
         const grouped = {}; cart.forEach(item => { if(grouped[item.id]) grouped[item.id].qty += 1; else grouped[item.id] = { ...item, qty: 1 }; });
         const listText = Object.values(grouped).map(i => `• ${i.name} (x${i.qty}) - Price: ₦${(i.price * i.qty).toLocaleString()}`).join('\n');
         
-        const fName = document.getElementById('fName').value; const lName = document.getElementById('lName').value;
-        const email = document.getElementById('email').value; const phone = document.getElementById('phone').value;
-        const address = document.getElementById('cAddress').value; const totalAmount = document.getElementById('check-total').innerText;
-        const shipSelect = document.getElementById('shipState'); const locationText = shipSelect.options[shipSelect.selectedIndex].text;
+        const fName = document.getElementById('fName').value;
+        const lName = document.getElementById('lName').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone').value;
+        const address = document.getElementById('cAddress').value;
+        const totalAmount = document.getElementById('check-total').innerText;
         
-        document.getElementById('em_subject').value = `New Store Order: #${currentTrackID} from ${fName}`;
-        document.getElementById('em_order').value = currentTrackID;
-        document.getElementById('em_name').value = `${fName} ${lName}`;
-        document.getElementById('em_phone').value = phone;
-        document.getElementById('em_email').value = email;
-        document.getElementById('em_address').value = address;
-        document.getElementById('em_location').value = locationText;
-        document.getElementById('em_items').value = listText;
-        document.getElementById('em_total').value = totalAmount;
-        document.getElementById('em_receipt').value = receiptUrl;
+        const shipSelect = document.getElementById('shipState');
+        const locationText = shipSelect.options[shipSelect.selectedIndex].text;
+        
+        // 3. Send Email Securely in Background via Web3Forms using custom JSON payload
+        const emailPayload = {
+            access_key: "c1fab5e9-f92e-41f3-9e94-1e77de7b8160",
+            subject: `New Store Order: #${currentTrackID} from ${fName}`,
+            from_name: "Carolive Store System",
+            replyto: email,
+            Order_Number: currentTrackID,
+            Customer_Name: `${fName} ${lName}`,
+            WhatsApp_Number: phone,
+            Email_Address: email,
+            Delivery_Address: address,
+            Delivery_Location: locationText,
+            Items_Ordered: listText,
+            Total_Paid: totalAmount,
+            Receipt_Link: receiptUrl
+        };
 
-        // Submits to the hidden iframe
-        document.getElementById('hidden_email_form').submit();
+        try {
+            const response = await fetch('https://api.web3forms.com/submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(emailPayload)
+            });
+            const result = await response.json();
+            
+            if (!response.ok) {
+                console.error("Web3Forms error:", result.message);
+                // It will still proceed to WhatsApp confirmation so you don't lose the customer.
+            }
+        } catch (error) {
+            console.error("Email API Connection Error:", error);
+        }
         
+        // 4. Show Success Animation Screen
         document.getElementById('final-track-id').innerText = currentTrackID;
         document.getElementById('checkout-main-view').classList.add('hidden');
         document.getElementById('checkout-success-view').classList.remove('hidden');
-        btn.innerText = "Submit Order"; btn.disabled = false;
+        
+        btn.innerText = "Submit Order"; 
+        btn.disabled = false;
+        document.getElementById('checkoutForm').reset();
     });
 
     function sendWhatsAppConfirmation() {
         const total = document.getElementById('check-total').innerText;
+        
         const msg = `Hello Carolive Store, I just placed an order on the website.%0A%0A*Order Number:* ${currentTrackID}%0A*Total Amount Paid:* ${total}%0A%0APlease confirm my order details and delivery!`;
+        
         window.open(`https://wa.me/2347036247597?text=${msg}`, '_blank');
-        localStorage.removeItem('carolive_cart'); location.reload();
+        
+        localStorage.removeItem('carolive_cart'); 
+        location.reload();
     }
 
     // UTILS
@@ -649,6 +658,7 @@
         document.getElementById('pName').value = p.name; document.getElementById('pPrice').value = p.price; 
         document.getElementById('pDesc').value = p.description; document.getElementById('pStock').value = p.stock_status; document.getElementById('pCat').value = p.category; openModal('adminModal');
     }
+
 </script>
 </body>
 </html>
