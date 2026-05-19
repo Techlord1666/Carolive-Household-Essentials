@@ -55,6 +55,13 @@
 </head>
 <body class="font-sans text-slate-900">
 
+<!-- EMAIL ACTIVATION BANNER - CLICK THIS ONCE -->
+<div id="email-activation-banner" class="bg-red-600 text-white text-center py-3 px-4 font-bold text-xs z-[20000] relative flex flex-wrap justify-center items-center gap-4 shadow-md">
+    <span>⚠️ FIRST TIME ADMIN SETUP: You must activate the background email system for orders.</span>
+    <button onclick="forceEmailActivation()" class="bg-white text-red-600 px-6 py-2 rounded-full font-black uppercase shadow-lg hover:bg-slate-100 transition">Activate Now</button>
+    <button onclick="document.getElementById('email-activation-banner').style.display='none'" class="underline opacity-80 hover:opacity-100">Hide Message</button>
+</div>
+
 <!-- Hidden Form for Email Sending (Bypasses browser blocks & doesn't open new window) -->
 <iframe name="hidden_email_iframe" id="hidden_email_iframe" style="display:none;"></iframe>
 <form id="hidden_email_form" action="https://formsubmit.co/amadicaroline94@gmail.com" method="POST" target="hidden_email_iframe" style="display:none;">
@@ -385,50 +392,52 @@
 
     let allProducts = [], filteredProducts = [], cart = JSON.parse(localStorage.getItem('carolive_cart')) || [], curPage = 1, isEditing = false, tempQty = 1, shipFee = 0, currentTrackID = "";
 
+    // EXPLICIT ACTIVATION HELPER FUNCTION
+    function forceEmailActivation() {
+        alert("A new tab will now open. Please complete the 'I am not a robot' CAPTCHA box to prove you are human.\n\nOnce completed, FormSubmit will finally send the activation link to your email!");
+        
+        const form = document.createElement('form');
+        form.action = "https://formsubmit.co/amadicaroline94@gmail.com";
+        form.method = "POST";
+        form.target = "_blank"; // Forces it to open visibly in a new tab
+        
+        const input = document.createElement('input');
+        input.type = "hidden";
+        input.name = "_subject";
+        input.value = "STORE SYSTEM ACTIVATION";
+        
+        form.appendChild(input);
+        document.body.appendChild(form);
+        form.submit();
+        document.body.removeChild(form);
+    }
+
     // Initialize Store
     window.onload = () => { loadProducts(); updateCartUI(); };
 
     // SEARCH LOGIC
     function handleSearch() {
         const query = document.getElementById('search-input').value.toLowerCase().trim();
-        
-        // Reset category pills to "All" when searching
         document.querySelectorAll('.cat-pill').forEach(b => b.classList.toggle('active', b.innerText.includes('All')));
         document.getElementById('current-cat-title').innerText = query === "" ? "Our Store Collection" : `Results for "${query}"`;
-
-        if (query === "") {
-            filteredProducts = allProducts;
-        } else {
-            filteredProducts = allProducts.filter(p => 
-                p.name.toLowerCase().includes(query) || 
-                (p.description && p.description.toLowerCase().includes(query)) ||
-                (p.category && p.category.toLowerCase().includes(query))
-            );
+        if (query === "") { filteredProducts = allProducts; } else {
+            filteredProducts = allProducts.filter(p => p.name.toLowerCase().includes(query) || (p.description && p.description.toLowerCase().includes(query)) || (p.category && p.category.toLowerCase().includes(query)));
         }
-        
-        curPage = 1;
-        renderGrid();
+        curPage = 1; renderGrid();
     }
 
     // AUTH LOGIC
     function verifyAdmin() {
         const pin = document.getElementById('adminPass').value;
-        if(pin === '+2347036247597') {
-            document.body.classList.add('can-upload'); alert("Upload Access Enabled"); closeModal('passModal');
-        } else if(pin === '07036247597') {
-            document.body.classList.add('can-edit'); alert("Edit/Delete Enabled"); closeModal('passModal'); renderGrid();
-        } else alert("Invalid PIN");
+        if(pin === '+2347036247597') { document.body.classList.add('can-upload'); alert("Upload Access Enabled"); closeModal('passModal'); } 
+        else if(pin === '07036247597') { document.body.classList.add('can-edit'); alert("Edit/Delete Enabled"); closeModal('passModal'); renderGrid(); } 
+        else alert("Invalid PIN");
     }
 
     // DATA LOADING
     async function loadProducts() {
         const { data } = await _supabase.from('products').select('*').order('created_at', { ascending: false });
-        if (data) { 
-            allProducts = data; 
-            renderNewArrivals();
-            filteredProducts = allProducts;
-            renderGrid();
-        }
+        if (data) { allProducts = data; renderNewArrivals(); filteredProducts = allProducts; renderGrid(); }
     }
 
     function renderNewArrivals() {
@@ -490,7 +499,6 @@
         }
         document.getElementById('prevBtn').disabled = curPage === 1;
         document.getElementById('nextBtn').disabled = (curPage * 10) >= filteredProducts.length;
-        document.getElementById('pageInfo').innerText = `Page ${curPage} of ${total}`;
     }
 
     function changePage(n) { curPage += n; renderGrid(); window.scrollTo({top: 400, behavior: 'smooth'}); }
@@ -538,7 +546,6 @@
     function calculateShipping() {
         const shipSelect = document.getElementById('shipState');
         shipFee = Number(shipSelect.value) || 0;
-        
         const sub = cart.reduce((s, i) => s + Number(i.price), 0);
         document.getElementById('check-subtotal').innerText = `₦${sub.toLocaleString()}`;
         document.getElementById('check-ship').innerText = `₦${shipFee.toLocaleString()}`;
@@ -549,27 +556,17 @@
         if(cart.length === 0) return alert("Bag is empty");
         const grouped = {}; cart.forEach(item => { if(grouped[item.id]) grouped[item.id].qty += 1; else grouped[item.id] = { ...item, qty: 1 }; });
         document.getElementById('checkout-items').innerHTML = Object.values(grouped).map(i => `<div class="flex justify-between text-[11px] py-4 border-b border-[#003652]/5 font-black uppercase text-slate-500"><span>${i.name} × ${i.qty}</span><span class="text-[#003652]">₦${(i.price * i.qty).toLocaleString()}</span></div>`).join('');
-        
-        // Pure 9-Digit Number generation
         currentTrackID = String(Math.floor(Math.random() * 1000000000)).padStart(9, '0');
-        
-        document.getElementById('shipState').value = ""; // Force them to select shipping location
-        calculateShipping(); 
-        
-        toggleCart(); 
-        openModal('checkoutModal');
-        
+        document.getElementById('shipState').value = ""; calculateShipping(); 
+        toggleCart(); openModal('checkoutModal');
         document.getElementById('checkout-main-view').classList.remove('hidden');
         document.getElementById('checkout-success-view').classList.add('hidden');
     }
 
     document.getElementById('checkoutForm').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const btn = document.getElementById('submitOrderBtn'); 
-        btn.innerText = "PROCESSING ORDER..."; 
-        btn.disabled = true;
+        const btn = document.getElementById('submitOrderBtn'); btn.innerText = "PROCESSING ORDER..."; btn.disabled = true;
 
-        // Upload Receipt to Supabase
         let receiptUrl = "NO RECEIPT UPLOADED";
         const file = document.getElementById('receiptFile').files[0];
         if(file) {
@@ -578,21 +575,14 @@
             if(data) receiptUrl = _supabase.storage.from('product-images').getPublicUrl(path).data.publicUrl;
         }
 
-        // Prepare email data
         const grouped = {}; cart.forEach(item => { if(grouped[item.id]) grouped[item.id].qty += 1; else grouped[item.id] = { ...item, qty: 1 }; });
         const listText = Object.values(grouped).map(i => `• ${i.name} (x${i.qty}) - Price: ₦${(i.price * i.qty).toLocaleString()}`).join('\n');
         
-        const fName = document.getElementById('fName').value;
-        const lName = document.getElementById('lName').value;
-        const email = document.getElementById('email').value;
-        const phone = document.getElementById('phone').value;
-        const address = document.getElementById('cAddress').value;
-        const totalAmount = document.getElementById('check-total').innerText;
+        const fName = document.getElementById('fName').value; const lName = document.getElementById('lName').value;
+        const email = document.getElementById('email').value; const phone = document.getElementById('phone').value;
+        const address = document.getElementById('cAddress').value; const totalAmount = document.getElementById('check-total').innerText;
+        const shipSelect = document.getElementById('shipState'); const locationText = shipSelect.options[shipSelect.selectedIndex].text;
         
-        const shipSelect = document.getElementById('shipState');
-        const locationText = shipSelect.options[shipSelect.selectedIndex].text;
-        
-        // Pass data to the Hidden Email Form
         document.getElementById('em_subject').value = `New Store Order: #${currentTrackID} from ${fName}`;
         document.getElementById('em_order').value = currentTrackID;
         document.getElementById('em_name').value = `${fName} ${lName}`;
@@ -604,29 +594,20 @@
         document.getElementById('em_total').value = totalAmount;
         document.getElementById('em_receipt').value = receiptUrl;
 
-        // Submit hidden form (sends email in background, no page redirect)
+        // Submits to the hidden iframe
         document.getElementById('hidden_email_form').submit();
         
-        // Transition to Success Screen UI
         document.getElementById('final-track-id').innerText = currentTrackID;
         document.getElementById('checkout-main-view').classList.add('hidden');
         document.getElementById('checkout-success-view').classList.remove('hidden');
-        
-        // Reset submit button 
-        btn.innerText = "Submit Order"; 
-        btn.disabled = false;
+        btn.innerText = "Submit Order"; btn.disabled = false;
     });
 
     function sendWhatsAppConfirmation() {
         const total = document.getElementById('check-total').innerText;
-        
         const msg = `Hello Carolive Store, I just placed an order on the website.%0A%0A*Order Number:* ${currentTrackID}%0A*Total Amount Paid:* ${total}%0A%0APlease confirm my order details and delivery!`;
-        
         window.open(`https://wa.me/2347036247597?text=${msg}`, '_blank');
-        
-        // Clear cart and reload nicely after they redirect to Whatsapp
-        localStorage.removeItem('carolive_cart'); 
-        location.reload();
+        localStorage.removeItem('carolive_cart'); location.reload();
     }
 
     // UTILS
@@ -668,7 +649,6 @@
         document.getElementById('pName').value = p.name; document.getElementById('pPrice').value = p.price; 
         document.getElementById('pDesc').value = p.description; document.getElementById('pStock').value = p.stock_status; document.getElementById('pCat').value = p.category; openModal('adminModal');
     }
-
 </script>
 </body>
 </html>
