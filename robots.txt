@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /dash.html
+
+Sitemap: https://www.carolivestores.com/sitemap.xml
