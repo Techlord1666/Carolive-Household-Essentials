@@ -1,3 +1,5 @@
+--- START OF FILE Paste May 25, 2026 - 9:09PM ---
+
 <!DOCTYPE html>
 <html class="light" lang="en">
 <head>
@@ -43,9 +45,10 @@
         .product-card:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.06); }
 
         /* Admin UI logic */
-        .upload-only, .edit-delete-only { display: none !important; }
+        .upload-only, .edit-delete-only, .admin-only { display: none !important; }
         body.can-upload .upload-only { display: flex !important; }
         body.can-edit .edit-delete-only { display: flex !important; }
+        body.can-upload .admin-only, body.can-edit .admin-only { display: flex !important; }
 
         /* Search Bar Enhancement */
         #search-input::placeholder { color: #94a3b8; font-weight: 600; }
@@ -143,12 +146,15 @@
 
     <!-- MAIN GRID SECTION -->
     <div class="max-w-7xl mx-auto px-4 py-12">
-        <div class="flex justify-between items-end mb-12 gap-4">
+        <div class="flex justify-between items-end mb-12 gap-4 flex-wrap">
             <div>
                 <h3 id="current-cat-title" class="text-3xl font-black text-[#003652] uppercase tracking-tighter leading-none">Our Store</h3>
                 <p class="text-[10px] font-black text-slate-400 mt-3 uppercase tracking-widest">Showing 10 premium items per page</p>
             </div>
-            <button onclick="openModal('adminModal')" class="upload-only bg-[#003652] text-white px-8 py-3 rounded-full font-black text-xs shadow-xl uppercase tracking-widest">+ Add New Product</button>
+            <div class="flex gap-2">
+                <button onclick="lockAdmin()" class="admin-only bg-red-600 text-white px-6 py-3 rounded-full font-black text-[10px] shadow-xl uppercase tracking-widest items-center">🔒 Lock Portal</button>
+                <button onclick="openModal('adminModal')" class="upload-only bg-[#003652] text-white px-6 py-3 rounded-full font-black text-[10px] shadow-xl uppercase tracking-widest items-center">+ Add New Product</button>
+            </div>
         </div>
         
         <div id="product-grid" class="grid grid-cols-2 lg:grid-cols-5 gap-4 md:gap-10 mb-20 min-h-[500px]">
@@ -300,7 +306,14 @@
 <form id="adminForm" class="space-y-6 font-bold"><input type="hidden" id="editId"><div class="grid grid-cols-1 md:grid-cols-2 gap-5"><input type="text" id="pName" placeholder="Product Name *" required class="p-4 border-2 border-slate-100 rounded-[1.5rem] w-full text-[#003652]"><input type="number" id="pPrice" placeholder="Price (₦) *" required class="p-4 border-2 border-slate-100 rounded-[1.5rem] w-full text-teal-600"></div>
 <div class="grid grid-cols-2 gap-5"><div class="p-4 bg-slate-50 rounded-3xl border shadow-inner"><label class="text-[9px] font-black text-slate-400 uppercase mb-1 block tracking-widest">Category</label><select id="pCat" class="w-full bg-transparent font-black text-[#003652] text-xs outline-none"><option value="New Arrivals">New Arrivals</option><option value="Kitchen Appliances">Kitchen Appliances</option><option value="Home Essentials">Home Essentials</option><option value="Health & Personal Care">Health & Care</option><option value="Electronics & Gadgets">Electronics</option><option value="Home & Living">Home & Living</option><option value="Beauty and fashion accessories">Beauty & Fashion</option><option value="Back to school items">Back to School</option><option value="kids and baby">Kids & Baby</option><option value="Gift items">Gift items</option></select></div>
 <div class="p-4 bg-slate-50 rounded-3xl border shadow-inner"><label class="text-[9px] font-black text-slate-400 uppercase mb-1 block tracking-widest">Stock</label><select id="pStock" class="w-full bg-transparent font-black text-[#003652] text-xs outline-none"><option value="In Stock">In Stock</option><option value="Single Product">Single Product</option></select></div></div><textarea id="pDesc" placeholder="Description..." rows="4" class="w-full p-5 border-2 border-slate-50 rounded-[2rem] font-medium text-slate-600"></textarea>
-<div class="grid grid-cols-2 md:grid-cols-3 gap-3 p-4 bg-slate-50 rounded-[2rem] border shadow-inner"><input type="file" id="f1" accept="image/*" class="text-[9px] border p-2 bg-white rounded-xl shadow-sm"><input type="file" id="f2" accept="image/*" class="text-[9px] border p-2 bg-white rounded-xl shadow-sm"><input type="file" id="f3" accept="image/*" class="text-[9px] border p-2 bg-white rounded-xl shadow-sm"><input type="file" id="f4" accept="image/*" class="text-[9px] border p-2 bg-white rounded-xl shadow-sm"><input type="file" id="f5" accept="image/*" class="text-[9px] border p-2 bg-white rounded-xl shadow-sm"></div>
+
+<!-- Updated Multi-Upload Input Field -->
+<div class="p-4 bg-slate-50 rounded-[2rem] border shadow-inner">
+    <label class="text-[9px] font-black text-slate-400 uppercase mb-2 block tracking-widest">Upload Images (Select up to 5 at once)</label>
+    <input type="file" id="multiFiles" accept="image/*" multiple class="text-[10px] w-full border p-3 bg-white rounded-xl shadow-sm cursor-pointer">
+    <p id="fileCount" class="text-[10px] font-bold text-teal-600 mt-2 hidden"></p>
+</div>
+
 <button type="submit" id="upBtn" class="w-full py-6 bg-teal-600 text-white rounded-[2rem] font-black uppercase tracking-widest shadow-2xl">Sync to Store</button></form></div></div>
 
 <!-- Footer -->
@@ -369,7 +382,7 @@
     let allProducts = [], filteredProducts = [], cart = JSON.parse(localStorage.getItem('carolive_cart')) || [], curPage = 1, isEditing = false, tempQty = 1, shipFee = 0, currentTrackID = "";
 
     // Initialize Store
-    window.onload = () => { loadProducts(); updateCartUI(); };
+    window.onload = () => { checkAdminSession(); loadProducts(); updateCartUI(); };
 
     // SEARCH LOGIC
     function handleSearch() {
@@ -388,14 +401,40 @@
         curPage = 1; renderGrid();
     }
 
-    // AUTH LOGIC
+    // AUTH LOGIC WITH SESSION REMEMBERING
+    function checkAdminSession() {
+        const role = sessionStorage.getItem('carolive_admin_role');
+        if(role === 'upload') {
+            document.body.classList.add('can-upload');
+        } else if(role === 'edit') {
+            document.body.classList.add('can-edit');
+        }
+    }
+
     function verifyAdmin() {
         const pin = document.getElementById('adminPass').value;
         if(pin === '+2347036247597') {
-            document.body.classList.add('can-upload'); alert("Upload Access Enabled"); closeModal('passModal');
+            sessionStorage.setItem('carolive_admin_role', 'upload');
+            document.body.classList.add('can-upload'); 
+            alert("Upload Access Enabled"); 
+            closeModal('passModal');
+            document.getElementById('adminPass').value = ""; // Clear for next time
         } else if(pin === '07036247597') {
-            document.body.classList.add('can-edit'); alert("Edit/Delete Enabled"); closeModal('passModal'); renderGrid();
+            sessionStorage.setItem('carolive_admin_role', 'edit');
+            document.body.classList.add('can-edit'); 
+            alert("Edit/Delete Enabled"); 
+            closeModal('passModal'); 
+            document.getElementById('adminPass').value = ""; // Clear for next time
+            renderGrid();
         } else alert("Invalid PIN");
+    }
+
+    function lockAdmin() {
+        sessionStorage.removeItem('carolive_admin_role');
+        document.body.classList.remove('can-upload');
+        document.body.classList.remove('can-edit');
+        alert("Portal Locked Successfully");
+        renderGrid();
     }
 
     // DATA LOADING
@@ -592,7 +631,6 @@
             
             if (!response.ok) {
                 console.error("Web3Forms error:", result.message);
-                // It will still proceed to WhatsApp confirmation so you don't lose the customer.
             }
         } catch (error) {
             console.error("Email API Connection Error:", error);
@@ -627,36 +665,62 @@
     function aiTalk(q) { window.open(`https://wa.me/2347036247597?text=Hello Caroline, ${q}`, '_blank'); }
     function toggleChat() { document.getElementById('ai-chatroom').classList.toggle('hidden'); }
 
+    // Multi-Upload Visual Feedback
+    document.getElementById('multiFiles').addEventListener('change', function() {
+        const text = document.getElementById('fileCount');
+        text.classList.remove('hidden');
+        if (this.files.length > 5) {
+            text.innerHTML = `<span class="text-red-500">You selected ${this.files.length} images. Only the first 5 will be uploaded.</span>`;
+        } else {
+            text.innerText = `${this.files.length} image(s) selected and ready.`;
+        }
+    });
+
     // Admin Upload
     document.getElementById('adminForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const btn = document.getElementById('upBtn'); btn.innerText = "SAVING..."; btn.disabled = true;
         const id = document.getElementById('editId').value;
         const urls = [];
-        for(let i=1; i<=5; i++){
-            const fileInput = document.getElementById(`f${i}`);
-            const file = fileInput.files[0];
-            if(file){
-                const path = `uploads/${Date.now()}_${file.name}`;
+        const files = document.getElementById('multiFiles').files;
+        
+        // Loop specifically up to 5 times for our 5 image slots
+        for(let i=0; i<5; i++){
+            if(files[i]){
+                const file = files[i];
+                const cleanName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, ''); // Safely clean name
+                const path = `uploads/${Date.now()}_${cleanName}`;
                 const { data } = await _supabase.storage.from('product-images').upload(path, file);
                 if(data) urls.push(_supabase.storage.from('product-images').getPublicUrl(path).data.publicUrl);
-            } else if(isEditing) { urls.push(allProducts.find(x => x.id === id)[`image${i}`]); }
+            } else if(isEditing) { 
+                urls.push(allProducts.find(x => x.id === id)[`image${i+1}`]); 
+            } else {
+                urls.push(null);
+            }
         }
+
         const payload = {
             name: document.getElementById('pName').value, price: document.getElementById('pPrice').value, 
             description: document.getElementById('pDesc').value, stock_status: document.getElementById('pStock').value,
             category: document.getElementById('pCat').value, image1: urls[0], image2: urls[1], image3: urls[2], image4: urls[3], image5: urls[4]
         };
         const res = isEditing ? await _supabase.from('products').update(payload).eq('id', id) : await _supabase.from('products').insert([payload]);
-        if(!res.error) location.reload(); else { alert(res.error.message); upBtn.disabled = false; }
+        if(!res.error) location.reload(); else { alert(res.error.message); btn.disabled = false; btn.innerText = "Sync to Store"; }
     });
 
     async function deleteProduct(id) { if(confirm("Confirm Removal?")) { await _supabase.from('products').delete().eq('id', id); location.reload(); } }
+    
     function startEdit(id) {
         const p = allProducts.find(x => x.id === id); isEditing = true;
         document.getElementById('adminTitle').innerText = "Update Item"; document.getElementById('editId').value = p.id;
         document.getElementById('pName').value = p.name; document.getElementById('pPrice').value = p.price; 
-        document.getElementById('pDesc').value = p.description; document.getElementById('pStock').value = p.stock_status; document.getElementById('pCat').value = p.category; openModal('adminModal');
+        document.getElementById('pDesc').value = p.description; document.getElementById('pStock').value = p.stock_status; document.getElementById('pCat').value = p.category;
+        
+        // Reset the image selection text/box so it doesn't mistakenly carry over
+        document.getElementById('multiFiles').value = "";
+        document.getElementById('fileCount').classList.add('hidden');
+
+        openModal('adminModal');
     }
 
 </script>
