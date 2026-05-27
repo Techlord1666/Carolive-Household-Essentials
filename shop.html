@@ -306,12 +306,6 @@
 <div id="adminModal" class="modal"><div class="modal-content !max-w-xl p-10"><h2 id="adminTitle" class="text-3xl font-black mb-10 text-[#003652] uppercase tracking-tighter border-b pb-6">Management</h2>
 <form id="adminForm" class="space-y-6 font-bold"><input type="hidden" id="editId"><div class="grid grid-cols-1 md:grid-cols-2 gap-5"><input type="text" id="pName" placeholder="Product Name *" required class="p-4 border-2 border-slate-100 rounded-[1.5rem] w-full text-[#003652]"><input type="number" id="pPrice" placeholder="Price (₦) *" required class="p-4 border-2 border-slate-100 rounded-[1.5rem] w-full text-teal-600"></div>
 
-<!-- SIZE INPUT ADDED -->
-<div class="p-4 bg-slate-50 rounded-3xl border shadow-inner">
-    <label class="text-[9px] font-black text-slate-400 uppercase mb-1 block tracking-widest">Available Sizes (Separate with comma e.g S, M, L)</label>
-    <input type="text" id="pSizes" placeholder="Leave empty if no sizes" class="w-full bg-transparent font-black text-[#003652] text-xs outline-none">
-</div>
-
 <div class="grid grid-cols-2 gap-5"><div class="p-4 bg-slate-50 rounded-3xl border shadow-inner"><label class="text-[9px] font-black text-slate-400 uppercase mb-1 block tracking-widest">Category</label><select id="pCat" class="w-full bg-transparent font-black text-[#003652] text-xs outline-none"><option value="New Arrivals">New Arrivals</option><option value="Kitchen Appliances">Kitchen Appliances</option><option value="Home Essentials">Home Essentials</option><option value="Health & Personal Care">Health & Care</option><option value="Electronics & Gadgets">Electronics</option><option value="Home & Living">Home & Living</option><option value="Beauty and fashion accessories">Beauty & Fashion</option><option value="Back to school items">Back to School</option><option value="kids and baby">Kids & Baby</option><option value="Gift items">Gift items</option></select></div>
 <div class="p-4 bg-slate-50 rounded-3xl border shadow-inner"><label class="text-[9px] font-black text-slate-400 uppercase mb-1 block tracking-widest">Stock</label><select id="pStock" class="w-full bg-transparent font-black text-[#003652] text-xs outline-none"><option value="In Stock">In Stock</option><option value="Single Product">Single Product</option></select></div></div><textarea id="pDesc" placeholder="Description..." rows="4" class="w-full p-5 border-2 border-slate-50 rounded-[2rem] font-medium text-slate-600"></textarea>
 
@@ -786,7 +780,6 @@
         const payload = {
             name: document.getElementById('pName').value, 
             price: document.getElementById('pPrice').value, 
-            sizes: document.getElementById('pSizes').value, // Saved sizes
             description: document.getElementById('pDesc').value, 
             stock_status: document.getElementById('pStock').value,
             category: document.getElementById('pCat').value, 
@@ -803,7 +796,6 @@
         document.getElementById('adminTitle').innerText = "Update Item"; document.getElementById('editId').value = p.id;
         document.getElementById('pName').value = p.name; 
         document.getElementById('pPrice').value = p.price; 
-        document.getElementById('pSizes').value = p.sizes || ''; // Load sizes
         document.getElementById('pDesc').value = p.description; 
         document.getElementById('pStock').value = p.stock_status; 
         document.getElementById('pCat').value = p.category;
